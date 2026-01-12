@@ -4,14 +4,16 @@ import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.service.SpaceResourceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/spaces")
 public class SpaceResourceController {
 
-    private SpaceResourceService spaceResourceService;
+    private final SpaceResourceService spaceResourceService;
 
     public SpaceResourceController(SpaceResourceService spaceResourceService) {
         this.spaceResourceService = spaceResourceService;
@@ -19,26 +21,43 @@ public class SpaceResourceController {
 
     @GetMapping()
     public ResponseEntity<List<SpaceResource>> getAllSpaces() {
-        return null;
+        return ResponseEntity.ok(spaceResourceService.getAllSpaces());
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SpaceResource> getSpaceById(@PathVariable String id) {
-        return null;
+    public ResponseEntity<SpaceResource> getSpaceById(@PathVariable Long id) {
+        return ResponseEntity.ok(spaceResourceService.getSpaceResourceById(id));
     }
 
     @PostMapping()
     public ResponseEntity<SpaceResource> createSpaceResource(@RequestBody SpaceResource spaceResource) {
-        return null;
+
+        spaceResourceService.createSpaceResource(spaceResource);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(spaceResource.getId())
+                .toUri();
+
+        return ResponseEntity
+                .created(location)
+                .body(spaceResource);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<SpaceResource> updateSpaceResource(@PathVariable String id, @RequestBody SpaceResource spaceResource) {
-        return null;
+    public ResponseEntity<SpaceResource> updateSpaceResource(
+            @PathVariable Long id, @RequestBody SpaceResource updatedSpaceResource)
+    {
+        spaceResourceService.updateSpaceResource(updatedSpaceResource, id);
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<SpaceResource> deleteSpaceResource(@PathVariable String id) {
-        return null;
+    public ResponseEntity<Void> deleteSpaceResource(@PathVariable Long id) {
+        spaceResourceService.deleteSpaceResource(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
