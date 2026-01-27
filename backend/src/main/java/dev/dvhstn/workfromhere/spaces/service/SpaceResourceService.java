@@ -26,11 +26,11 @@ public class SpaceResourceService {
         spaceResourceRepository.save(spaceResource);
     }
 
-    public SpaceResource updateSpaceResource(SpaceResource updatedSpaceResource, Long id) {
+    public void updateSpaceResource(SpaceResource updatedSpaceResource, Long id) {
         SpaceResource originalSpaceResource = spaceResourceRepository.findSpaceById(id);
         updateSpace(updatedSpaceResource, originalSpaceResource);
 
-        return  spaceResourceRepository.save(originalSpaceResource);
+        spaceResourceRepository.save(originalSpaceResource);
     }
 
     public void deleteSpaceResource(Long id) {
