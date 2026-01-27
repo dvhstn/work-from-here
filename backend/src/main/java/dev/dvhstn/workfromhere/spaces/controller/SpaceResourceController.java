@@ -46,7 +46,7 @@ public class SpaceResourceController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<SpaceResource> updateSpaceResource(
+    public ResponseEntity<Void> updateSpaceResource(
             @PathVariable Long id, @RequestBody SpaceResource updatedSpaceResource)
     {
         spaceResourceService.updateSpaceResource(updatedSpaceResource, id);
