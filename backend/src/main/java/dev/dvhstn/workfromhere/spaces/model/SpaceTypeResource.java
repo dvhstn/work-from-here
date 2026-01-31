@@ -15,5 +15,12 @@ public enum SpaceTypeResource {
         this.name = name;
     }
 
-
+    public static SpaceTypeResource getById(Integer id) {
+        for (SpaceTypeResource spaceTypeResource : SpaceTypeResource.values()) {
+            if (spaceTypeResource.getId().equals(id)) {
+                return spaceTypeResource;
+            }
+        }
+        return null;
+    }
 }
