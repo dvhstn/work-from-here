@@ -1,5 +1,7 @@
 package dev.dvhstn.workfromhere.spaces.controller;
 
+import dev.dvhstn.workfromhere.spaces.dto.SpaceRequestDTO;
+import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
 import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.service.SpaceResourceService;
 import org.springframework.http.ResponseEntity;
@@ -20,34 +22,34 @@ public class SpaceResourceController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<SpaceResource>> getAllSpaces() {
+    public ResponseEntity<List<SpaceResponseDTO>> getAllSpaces() {
         return ResponseEntity.ok(spaceResourceService.getAllSpaces());
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SpaceResource> getSpaceById(@PathVariable Long id) {
+    public ResponseEntity<SpaceResponseDTO> getSpaceById(@PathVariable Long id) {
         return ResponseEntity.ok(spaceResourceService.getSpaceResourceById(id));
     }
 
     @PostMapping()
-    public ResponseEntity<SpaceResource> createSpaceResource(@RequestBody SpaceResource spaceResource) {
+    public ResponseEntity<SpaceResponseDTO> createSpaceResource(@RequestBody SpaceRequestDTO spaceResource) {
 
-        spaceResourceService.createSpaceResource(spaceResource);
+        SpaceResponseDTO responseDTO = spaceResourceService.createSpaceResource(spaceResource);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(spaceResource.getId())
+                .buildAndExpand(responseDTO.getId())
                 .toUri();
 
         return ResponseEntity
                 .created(location)
-                .body(spaceResource);
+                .body(responseDTO);
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Void> updateSpaceResource(
-            @PathVariable Long id, @RequestBody SpaceResource updatedSpaceResource)
+            @PathVariable Long id, @RequestBody SpaceRequestDTO updatedSpaceResource)
     {
         spaceResourceService.updateSpaceResource(updatedSpaceResource, id);
 
