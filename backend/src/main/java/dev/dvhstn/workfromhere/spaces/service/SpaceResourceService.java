@@ -2,6 +2,7 @@ package dev.dvhstn.workfromhere.spaces.service;
 
 import dev.dvhstn.workfromhere.spaces.dto.SpaceRequestDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
+import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceNotFoundException;
 import dev.dvhstn.workfromhere.spaces.mapper.SpaceResourceMapper;
 import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.model.SpaceTypeResource;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class SpaceResourceService {
@@ -29,7 +31,12 @@ public class SpaceResourceService {
     }
 
     public SpaceResponseDTO getSpaceResourceById(Long id) {
-        return spaceResourceMapper.toSpaceResponseDTO(spaceResourceRepository.findSpaceById(id));
+        SpaceResource resource = spaceResourceRepository.findSpaceById(id);
+
+        if (resource == null) {
+            throw new SpaceResourceNotFoundException("Space with id " + id + " not found");
+        }
+        return spaceResourceMapper.toSpaceResponseDTO(resource);
     }
 
     public SpaceResponseDTO createSpaceResource(SpaceRequestDTO spaceResource) {
@@ -55,6 +62,14 @@ public class SpaceResourceService {
     }
 
     public static void updateSpace(SpaceRequestDTO updatedSpaceResource, SpaceResource originalSpaceResource) {
+        if (Objects.isNull(originalSpaceResource)) {
+            throw new  SpaceResourceNotFoundException("Space with id " + originalSpaceResource.getId() + " not found");
+        }
+
+        if (Objects.isNull(updatedSpaceResource)) {
+            throw new SpaceResourceNotFoundException("Space resource not found");
+        }
+
         originalSpaceResource.setName(updatedSpaceResource.getName());
         originalSpaceResource.setDescription(updatedSpaceResource.getDescription());
         originalSpaceResource.setType(SpaceTypeResource.getById(updatedSpaceResource.getTypeId()));
