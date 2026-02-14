@@ -31,11 +31,8 @@ public class SpaceResourceService {
     }
 
     public SpaceResponseDTO getSpaceResourceById(Long id) {
-        SpaceResource resource = spaceResourceRepository.findSpaceById(id);
-
-        if (resource == null) {
-            throw new SpaceResourceNotFoundException("Space with id " + id + " not found");
-        }
+        SpaceResource resource = spaceResourceRepository.findById(id)
+                .orElseThrow(() -> new SpaceResourceNotFoundException("Space with id " + id + " not found"));
         return spaceResourceMapper.toSpaceResponseDTO(resource);
     }
 
@@ -47,25 +44,20 @@ public class SpaceResourceService {
     }
 
     public void updateSpaceResource(SpaceRequestDTO updatedSpaceResource, Long id) {
-        SpaceResource originalSpaceResource = spaceResourceRepository.findSpaceById(id);
+        SpaceResource originalSpaceResource = spaceResourceRepository.findById(id)
+                .orElseThrow(() -> new SpaceResourceNotFoundException("Space with id " + id + " not found"));
         updateSpace(updatedSpaceResource, originalSpaceResource);
 
         spaceResourceRepository.save(originalSpaceResource);
     }
 
     public void deleteSpaceResource(Long id) {
-        SpaceResource spaceToDelete = spaceResourceRepository.findSpaceById(id);
-
-        if  (spaceToDelete != null) {
-            spaceResourceRepository.delete(spaceToDelete);
-        }
+        SpaceResource spaceToDelete = spaceResourceRepository.findById(id)
+                .orElseThrow(() -> new SpaceResourceNotFoundException("Space with id " + id + " not found"));
+        spaceResourceRepository.delete(spaceToDelete);
     }
 
     public static void updateSpace(SpaceRequestDTO updatedSpaceResource, SpaceResource originalSpaceResource) {
-        if (Objects.isNull(originalSpaceResource)) {
-            throw new  SpaceResourceNotFoundException("Space with id " + originalSpaceResource.getId() + " not found");
-        }
-
         if (Objects.isNull(updatedSpaceResource)) {
             throw new SpaceResourceNotFoundException("Space resource not found");
         }
