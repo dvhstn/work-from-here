@@ -1,6 +1,7 @@
 package dev.dvhstn.workfromhere.spaces.model;
 
 import lombok.Getter;
+import dev.dvhstn.workfromhere.spaces.exception.SpaceTypeNotFoundException;
 
 @Getter
 public enum SpaceTypeResource {
@@ -16,11 +17,14 @@ public enum SpaceTypeResource {
     }
 
     public static SpaceTypeResource getById(Integer id) {
+        if (id == null) {
+            throw new SpaceTypeNotFoundException("Space type id is required");
+        }
         for (SpaceTypeResource spaceTypeResource : SpaceTypeResource.values()) {
             if (spaceTypeResource.getId().equals(id)) {
                 return spaceTypeResource;
             }
         }
-        return null;
+        throw new SpaceTypeNotFoundException("Unknown space type id: " + id);
     }
 }
