@@ -2,8 +2,8 @@ package dev.dvhstn.workfromhere.spaces.controller;
 
 import dev.dvhstn.workfromhere.spaces.dto.SpaceRequestDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
-import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.service.SpaceResourceService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -32,7 +32,7 @@ public class SpaceResourceController {
     }
 
     @PostMapping()
-    public ResponseEntity<SpaceResponseDTO> createSpaceResource(@RequestBody SpaceRequestDTO spaceResource) {
+    public ResponseEntity<SpaceResponseDTO> createSpaceResource(@Valid @RequestBody SpaceRequestDTO spaceResource) {
 
         SpaceResponseDTO responseDTO = spaceResourceService.createSpaceResource(spaceResource);
 
@@ -49,7 +49,7 @@ public class SpaceResourceController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Void> updateSpaceResource(
-            @PathVariable Long id, @RequestBody SpaceRequestDTO updatedSpaceResource)
+            @PathVariable Long id, @Valid @RequestBody SpaceRequestDTO updatedSpaceResource)
     {
         spaceResourceService.updateSpaceResource(updatedSpaceResource, id);
 
