@@ -8,6 +8,7 @@ import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.model.SpaceTypeResource;
 import dev.dvhstn.workfromhere.spaces.repository.SpaceResourceRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.*;
 import java.util.List;
@@ -43,6 +44,7 @@ public class SpaceResourceService {
         return spaceResourceMapper.toSpaceResponseDTO(mappedSpaceResource);
     }
 
+    @Transactional
     public void updateSpaceResource(SpaceRequestDTO updatedSpaceResource, Long id) {
         SpaceResource originalSpaceResource = spaceResourceRepository.findById(id)
                 .orElseThrow(() -> new SpaceResourceNotFoundException("Space with id " + id + " not found"));
@@ -51,6 +53,7 @@ public class SpaceResourceService {
         spaceResourceRepository.save(originalSpaceResource);
     }
 
+    @Transactional
     public void deleteSpaceResource(Long id) {
         SpaceResource spaceToDelete = spaceResourceRepository.findById(id)
                 .orElseThrow(() -> new SpaceResourceNotFoundException("Space with id " + id + " not found"));
