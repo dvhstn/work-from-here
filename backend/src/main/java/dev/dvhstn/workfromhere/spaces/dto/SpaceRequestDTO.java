@@ -22,7 +22,6 @@ public class SpaceRequestDTO {
     @NotNull(message = "Type id is required")
     private Integer typeId;
 
-    @NotNull(message = "Wifi Availability is required")
     private boolean wifiAvailable;
 
     @Size(max = 100, message = "WiFi password must be at most 100 characters")
