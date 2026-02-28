@@ -1,6 +1,7 @@
 package dev.dvhstn.workfromhere.exceptions;
 
 import dev.dvhstn.workfromhere.spaces.exception.SpaceTypeNotFoundException;
+import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceAlreadyExistsException;
 import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -35,5 +36,17 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(SpaceResourceAlreadyExistsException.class)
+    public ResponseEntity<ApiErrorResource> handleException(SpaceResourceAlreadyExistsException ex, HttpServletRequest request) {
+        ApiErrorResource error = ApiErrorResource.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .path(request.getRequestURI())
+                .message(ex.getMessage())
+                .timestamp(Instant.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 }
