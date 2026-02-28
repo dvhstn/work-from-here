@@ -2,6 +2,7 @@ package dev.dvhstn.workfromhere.spaces.service;
 
 import dev.dvhstn.workfromhere.spaces.dto.SpaceRequestDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
+import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceAlreadyExistsException;
 import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceNotFoundException;
 import dev.dvhstn.workfromhere.spaces.mapper.SpaceResourceMapper;
 import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
@@ -37,6 +38,10 @@ public class SpaceResourceService {
     }
 
     public SpaceResponseDTO createSpaceResource(SpaceRequestDTO spaceResource) {
+        if (spaceResourceRepository.existsByName(spaceResource.getName())) {
+            throw new SpaceResourceAlreadyExistsException("Space with name '" + spaceResource.getName() + "' already exists");
+        }
+
         SpaceResource mappedSpaceResource = spaceResourceMapper.toSpaceResource(spaceResource);
         spaceResourceRepository.save(mappedSpaceResource);
 
@@ -47,6 +52,11 @@ public class SpaceResourceService {
     public void updateSpaceResource(SpaceRequestDTO updatedSpaceResource, Long id) {
         SpaceResource originalSpaceResource = spaceResourceRepository.findById(id)
                 .orElseThrow(() -> new SpaceResourceNotFoundException("Space with id " + id + " not found"));
+
+        if (spaceResourceRepository.existsByNameAndIdNot(updatedSpaceResource.getName(), id)) {
+            throw new SpaceResourceAlreadyExistsException("Space with name '" + updatedSpaceResource.getName() + "' already exists");
+        }
+
         updateSpace(updatedSpaceResource, originalSpaceResource);
 
         spaceResourceRepository.save(originalSpaceResource);
