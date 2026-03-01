@@ -37,6 +37,7 @@ public class SpaceResourceService {
         return spaceResourceMapper.toSpaceResponseDTO(resource);
     }
 
+    @Transactional
     public SpaceResponseDTO createSpaceResource(SpaceRequestDTO spaceResource) {
         if (spaceResourceRepository.existsByName(spaceResource.getName())) {
             throw new SpaceResourceAlreadyExistsException("Space with name '" + spaceResource.getName() + "' already exists");
