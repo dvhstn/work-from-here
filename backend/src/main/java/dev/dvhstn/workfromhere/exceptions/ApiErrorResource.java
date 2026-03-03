@@ -9,7 +9,6 @@ import java.time.Instant;
 @Builder
 public class ApiErrorResource {
     private int status;
-    private String error;
     private String message;
     private String path;
     private Instant timestamp;
