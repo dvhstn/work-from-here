@@ -8,6 +8,7 @@ import dev.dvhstn.workfromhere.spaces.mapper.SpaceResourceMapper;
 import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.model.SpaceTypeResource;
 import dev.dvhstn.workfromhere.spaces.repository.SpaceResourceRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,11 @@ public class SpaceResourceService {
         }
 
         SpaceResource mappedSpaceResource = spaceResourceMapper.toSpaceResource(spaceResource);
-        spaceResourceRepository.save(mappedSpaceResource);
+        try {
+            spaceResourceRepository.saveAndFlush(mappedSpaceResource);
+        } catch (DataIntegrityViolationException e) {
+            throw new SpaceResourceAlreadyExistsException("Space with name '" + spaceResource.getName() + "' already exists");
+        }
 
         return spaceResourceMapper.toSpaceResponseDTO(mappedSpaceResource);
     }
@@ -59,7 +64,11 @@ public class SpaceResourceService {
 
         updateSpace(updatedSpaceResource, originalSpaceResource);
 
-        spaceResourceRepository.save(originalSpaceResource);
+        try {
+            spaceResourceRepository.saveAndFlush(originalSpaceResource);
+        } catch (DataIntegrityViolationException e) {
+            throw new SpaceResourceAlreadyExistsException("Space with name '" + updatedSpaceResource.getName() + "' already exists");
+        }
     }
 
     @Transactional
