@@ -78,7 +78,7 @@ public class SpaceResourceService {
         spaceResourceRepository.delete(spaceToDelete);
     }
 
-    public void updateSpace(SpaceRequestDTO updatedSpaceResource, SpaceResource originalSpaceResource) {
+    private void updateSpace(SpaceRequestDTO updatedSpaceResource, SpaceResource originalSpaceResource) {
         if (Objects.isNull(updatedSpaceResource)) {
             throw new SpaceResourceNotFoundException("Space resource not found");
         }
