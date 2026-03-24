@@ -8,6 +8,8 @@ import dev.dvhstn.workfromhere.spaces.mapper.SpaceResourceMapper;
 import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.model.SpaceTypeResource;
 import dev.dvhstn.workfromhere.spaces.repository.SpaceResourceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,8 @@ import java.util.Objects;
 
 @Service
 public class SpaceResourceService {
+
+    private static final Logger log = LoggerFactory.getLogger(SpaceResourceService.class);
     private final SpaceResourceMapper spaceResourceMapper;
     private final SpaceResourceRepository spaceResourceRepository;
 
@@ -27,11 +31,13 @@ public class SpaceResourceService {
     }
 
     public Page<SpaceResponseDTO> getAllSpaces(Pageable pageable) {
+        log.debug("Fetching all spaces, page: {}", pageable);
         return spaceResourceRepository.findAll(pageable)
                 .map(spaceResourceMapper::toSpaceResponseDTO);
     }
 
     public SpaceResponseDTO getSpaceResourceById(Long id) {
+        log.debug("Fetching space by id: {}", id);
         SpaceResource resource = spaceResourceRepository.findById(id)
                 .orElseThrow(() -> new SpaceResourceNotFoundException("Space with id " + id + " not found"));
         return spaceResourceMapper.toSpaceResponseDTO(resource);
@@ -47,9 +53,11 @@ public class SpaceResourceService {
         try {
             spaceResourceRepository.saveAndFlush(mappedSpaceResource);
         } catch (DataIntegrityViolationException e) {
+            log.warn("Race condition detected creating space '{}': {}", spaceResource.getName(), e.getMessage());
             throw new SpaceResourceAlreadyExistsException("Space with name '" + spaceResource.getName() + "' already exists");
         }
 
+        log.info("Created space '{}' with id {}", mappedSpaceResource.getName(), mappedSpaceResource.getId());
         return spaceResourceMapper.toSpaceResponseDTO(mappedSpaceResource);
     }
 
@@ -67,8 +75,11 @@ public class SpaceResourceService {
         try {
             spaceResourceRepository.saveAndFlush(originalSpaceResource);
         } catch (DataIntegrityViolationException e) {
+            log.warn("Race condition detected updating space id {} to name '{}': {}", id, updatedSpaceResource.getName(), e.getMessage());
             throw new SpaceResourceAlreadyExistsException("Space with name '" + updatedSpaceResource.getName() + "' already exists");
         }
+
+        log.info("Updated space id {}", id);
     }
 
     @Transactional
@@ -76,6 +87,7 @@ public class SpaceResourceService {
         SpaceResource spaceToDelete = spaceResourceRepository.findById(id)
                 .orElseThrow(() -> new SpaceResourceNotFoundException("Space with id " + id + " not found"));
         spaceResourceRepository.delete(spaceToDelete);
+        log.info("Deleted space '{}' with id {}", spaceToDelete.getName(), id);
     }
 
     private void updateSpace(SpaceRequestDTO updatedSpaceResource, SpaceResource originalSpaceResource) {
