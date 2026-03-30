@@ -56,12 +56,10 @@ public class SpaceResourceController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Void> updateSpaceResource(
+    public ResponseEntity<SpaceResponseDTO> updateSpaceResource(
             @PathVariable Long id, @Valid @RequestBody SpaceRequestDTO updatedSpaceResource)
     {
-        spaceResourceService.updateSpaceResource(updatedSpaceResource, id);
-
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(spaceResourceService.updateSpaceResource(updatedSpaceResource, id));
     }
 
     @DeleteMapping(value = "/{id}")
