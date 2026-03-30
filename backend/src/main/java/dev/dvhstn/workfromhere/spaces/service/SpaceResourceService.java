@@ -62,7 +62,7 @@ public class SpaceResourceService {
     }
 
     @Transactional
-    public void updateSpaceResource(SpaceRequestDTO updatedSpaceResource, Long id) {
+    public SpaceResponseDTO updateSpaceResource(SpaceRequestDTO updatedSpaceResource, Long id) {
         SpaceResource originalSpaceResource = spaceResourceRepository.findById(id)
                 .orElseThrow(() -> new SpaceResourceNotFoundException("Space with id " + id + " not found"));
 
@@ -80,6 +80,7 @@ public class SpaceResourceService {
         }
 
         log.info("Updated space id {}", id);
+        return spaceResourceMapper.toSpaceResponseDTO(originalSpaceResource);
     }
 
     @Transactional
