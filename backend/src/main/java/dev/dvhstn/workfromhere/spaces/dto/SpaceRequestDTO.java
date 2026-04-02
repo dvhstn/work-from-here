@@ -16,7 +16,7 @@ public class SpaceRequestDTO {
     private String name;
 
     @NotBlank(message = "Description is required")
-    @Size(max = 1000, message = "Description must be at most 1000 characters")
+    @Size(max = 255, message = "Description must be at most 255 characters")
     private String description;
 
     @NotNull(message = "Type id is required")
