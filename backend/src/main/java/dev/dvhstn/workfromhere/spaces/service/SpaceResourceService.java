@@ -8,6 +8,7 @@ import dev.dvhstn.workfromhere.spaces.mapper.SpaceResourceMapper;
 import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.model.SpaceTypeResource;
 import dev.dvhstn.workfromhere.spaces.repository.SpaceResourceRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,19 +17,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-
 @Service
+@RequiredArgsConstructor
 public class SpaceResourceService {
 
     private static final Logger log = LoggerFactory.getLogger(SpaceResourceService.class);
     private final SpaceResourceMapper spaceResourceMapper;
     private final SpaceResourceRepository spaceResourceRepository;
-
-    public SpaceResourceService(SpaceResourceMapper spaceResourceMapper, SpaceResourceRepository spaceResourceRepository) {
-        this.spaceResourceMapper = spaceResourceMapper;
-        this.spaceResourceRepository = spaceResourceRepository;
-    }
 
     public Page<SpaceResponseDTO> getAllSpaces(Pageable pageable) {
         log.debug("Fetching all spaces, page: {}", pageable);
@@ -92,10 +87,6 @@ public class SpaceResourceService {
     }
 
     private void updateSpace(SpaceRequestDTO updatedSpaceResource, SpaceResource originalSpaceResource) {
-        if (Objects.isNull(updatedSpaceResource)) {
-            throw new SpaceResourceNotFoundException("Space resource not found");
-        }
-
         originalSpaceResource.setName(updatedSpaceResource.getName());
         originalSpaceResource.setDescription(updatedSpaceResource.getDescription());
         originalSpaceResource.setType(SpaceTypeResource.getById(updatedSpaceResource.getTypeId()));
