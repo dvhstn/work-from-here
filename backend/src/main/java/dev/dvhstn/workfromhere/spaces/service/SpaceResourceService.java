@@ -11,7 +11,6 @@ import dev.dvhstn.workfromhere.spaces.repository.SpaceResourceRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,12 +44,7 @@ public class SpaceResourceService {
         }
 
         SpaceResource mappedSpaceResource = spaceResourceMapper.toSpaceResource(spaceResource);
-        try {
-            spaceResourceRepository.saveAndFlush(mappedSpaceResource);
-        } catch (DataIntegrityViolationException e) {
-            log.warn("Race condition detected creating space '{}': {}", spaceResource.getName(), e.getMessage());
-            throw new SpaceResourceAlreadyExistsException("Space with name '" + spaceResource.getName() + "' already exists");
-        }
+        spaceResourceRepository.saveAndFlush(mappedSpaceResource);
 
         log.info("Created space '{}' with id {}", mappedSpaceResource.getName(), mappedSpaceResource.getId());
         return spaceResourceMapper.toSpaceResponseDTO(mappedSpaceResource);
@@ -66,13 +60,7 @@ public class SpaceResourceService {
         }
 
         updateSpace(updatedSpaceResource, originalSpaceResource);
-
-        try {
-            spaceResourceRepository.saveAndFlush(originalSpaceResource);
-        } catch (DataIntegrityViolationException e) {
-            log.warn("Race condition detected updating space id {} to name '{}': {}", id, updatedSpaceResource.getName(), e.getMessage());
-            throw new SpaceResourceAlreadyExistsException("Space with name '" + updatedSpaceResource.getName() + "' already exists");
-        }
+        spaceResourceRepository.saveAndFlush(originalSpaceResource);
 
         log.info("Updated space id {}", id);
         return spaceResourceMapper.toSpaceResponseDTO(originalSpaceResource);
