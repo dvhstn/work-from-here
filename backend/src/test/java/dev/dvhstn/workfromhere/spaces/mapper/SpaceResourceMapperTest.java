@@ -32,21 +32,17 @@ public class SpaceResourceMapperTest {
     }
 
     @Test
-    void toSpaceRequestDTO_WhenSpaceIsPassedIn_MapCorrectly() {
+    void toSpaceResource_WhenWifiNotAvailable_WifiPasswordIsNull() {
         // Given
-        SpaceResource expected = createMockSpaceResource(
-                123L,"TestSpace", "Not a real place", SpaceTypeResource.CAFE, true, "Password123!");
+        SpaceRequestDTO request = createMockSpaceRequestDTO("TestSpace", "Not a real place", 1, false, "ShouldBeDropped!");
 
         // When
-        SpaceRequestDTO actual = mapper.toSpaceRequestDTO(expected);
+        SpaceResource actual = mapper.toSpaceResource(request);
 
         // Then
         assertAll(
-                ()-> assertEquals(expected.getName(), actual.getName()),
-                ()-> assertEquals(expected.getDescription(), actual.getDescription()),
-                ()-> assertEquals(expected.getType().getId(), actual.getTypeId()),
-                ()-> assertEquals(expected.isWifiAvailable(), actual.isWifiAvailable()),
-                ()-> assertEquals(expected.getWifiPassword(), actual.getWifiPassword())
+                () -> assertEquals(false, actual.isWifiAvailable()),
+                () -> assertEquals(null, actual.getWifiPassword())
         );
     }
 
