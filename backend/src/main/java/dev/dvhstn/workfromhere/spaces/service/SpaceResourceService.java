@@ -79,6 +79,6 @@ public class SpaceResourceService {
         originalSpaceResource.setDescription(updatedSpaceResource.getDescription());
         originalSpaceResource.setType(SpaceTypeResource.getById(updatedSpaceResource.getTypeId()));
         originalSpaceResource.setWifiAvailable(updatedSpaceResource.isWifiAvailable());
-        originalSpaceResource.setWifiPassword(updatedSpaceResource.getWifiPassword());
+        originalSpaceResource.setWifiPassword(updatedSpaceResource.isWifiAvailable() ? updatedSpaceResource.getWifiPassword() : null);
     }
 }

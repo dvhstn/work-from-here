@@ -8,16 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SpaceResourceMapper {
-    public SpaceRequestDTO toSpaceRequestDTO(SpaceResource space) {
-        return SpaceRequestDTO.builder()
-                .name(space.getName())
-                .description(space.getDescription())
-                .typeId(space.getType().getId())
-                .wifiAvailable(space.isWifiAvailable())
-                .wifiPassword(space.getWifiPassword())
-                .build();
-    }
-
     public SpaceResponseDTO toSpaceResponseDTO(SpaceResource space) {
         return SpaceResponseDTO.builder()
                 .id(space.getId())
@@ -35,7 +25,7 @@ public class SpaceResourceMapper {
                 .description(spaceRequestDTO.getDescription())
                 .type(SpaceTypeResource.getById(spaceRequestDTO.getTypeId()))
                 .wifiAvailable(spaceRequestDTO.isWifiAvailable())
-                .wifiPassword(spaceRequestDTO.getWifiPassword())
+                .wifiPassword(spaceRequestDTO.isWifiAvailable() ? spaceRequestDTO.getWifiPassword() : null)
                 .build();
     }
 }
