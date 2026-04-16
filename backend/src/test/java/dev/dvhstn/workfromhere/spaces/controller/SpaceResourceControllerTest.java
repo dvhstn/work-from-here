@@ -183,6 +183,19 @@ class SpaceResourceControllerTest {
     }
 
     @Test
+    void createSpace_WhenWifiPasswordTooShort_Returns400() throws Exception {
+        // Given - empty string bypasses @NotBlank (field is not @NotBlank) but hits @Size(min=1)
+        SpaceRequestDTO request = buildRequestDTO("Valid Name", "Valid description", 1, true, "");
+
+        // When / Then
+        mockMvc.perform(post(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
     void createSpace_WhenNameAlreadyExists_Returns409() throws Exception {
         // Given
         SpaceRequestDTO request = buildRequestDTO("Duplicate Name", "Some description", 1, false, null);
@@ -209,7 +222,7 @@ class SpaceResourceControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message", containsString("Name must be at most 100 characters")));
+                .andExpect(jsonPath("$.message", containsString("Name must be between 1 and 100 characters")));
     }
 
     // --- PUT /api/v1/spaces/{id} ---
