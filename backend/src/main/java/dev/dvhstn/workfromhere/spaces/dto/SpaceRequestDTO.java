@@ -12,11 +12,11 @@ import lombok.Data;
 @Builder
 public class SpaceRequestDTO {
     @NotBlank(message = "Name is required")
-    @Size(max = 100, message = "Name must be at most 100 characters")
+    @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
     private String name;
 
     @NotBlank(message = "Description is required")
-    @Size(max = 255, message = "Description must be at most 255 characters")
+    @Size(min = 1, max = 255, message = "Description must be between 1 and 255 characters")
     private String description;
 
     @NotNull(message = "Type id is required")
@@ -24,7 +24,7 @@ public class SpaceRequestDTO {
 
     private boolean wifiAvailable;
 
-    @Size(max = 100, message = "WiFi password must be at most 100 characters")
+    @Size(min = 1, max = 100, message = "WiFi password must be between 1 and 100 characters")
     private String wifiPassword;
 
     @AssertTrue(message = "WiFi password is required when WiFi is available")
