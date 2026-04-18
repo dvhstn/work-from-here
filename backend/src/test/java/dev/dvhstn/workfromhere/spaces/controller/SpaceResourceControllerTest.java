@@ -1,6 +1,6 @@
 package dev.dvhstn.workfromhere.spaces.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceRequestDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
 import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceAlreadyExistsException;
@@ -9,7 +9,7 @@ import dev.dvhstn.workfromhere.spaces.model.SpaceTypeResource;
 import dev.dvhstn.workfromhere.spaces.service.SpaceResourceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
