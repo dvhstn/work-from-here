@@ -1,7 +1,5 @@
 package dev.dvhstn.workfromhere.spaces.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -26,14 +24,6 @@ public class SpaceRequestDTO {
     @NotNull(message = "Type id is required")
     private Integer typeId;
 
-    private boolean wifiAvailable;
-
     @Size(min = 1, max = 100, message = "WiFi password must be between 1 and 100 characters")
     private String wifiPassword;
-
-    @AssertTrue(message = "WiFi password is required when WiFi is available")
-    @JsonIgnore
-    public boolean isWifiPasswordValid() {
-        return !wifiAvailable || (wifiPassword != null && !wifiPassword.isBlank());
-    }
 }

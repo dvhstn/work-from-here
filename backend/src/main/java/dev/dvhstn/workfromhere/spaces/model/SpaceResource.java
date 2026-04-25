@@ -35,8 +35,9 @@ public class SpaceResource {
     @Column(nullable = false)
     private SpaceTypeResource type;
 
-    @Column(nullable = false)
-    private boolean wifiAvailable;
-
     private String wifiPassword;
+
+    public boolean isWifiAvailable() {
+        return wifiPassword != null;
+    }
 }

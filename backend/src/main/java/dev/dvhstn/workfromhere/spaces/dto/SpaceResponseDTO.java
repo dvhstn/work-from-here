@@ -15,6 +15,9 @@ public class SpaceResponseDTO {
     private String name;
     private String description;
     private SpaceTypeResource type;
-    private boolean wifiAvailable;
     private String wifiPassword;
+
+    public boolean isWifiAvailable() {
+        return wifiPassword != null;
+    }
 }

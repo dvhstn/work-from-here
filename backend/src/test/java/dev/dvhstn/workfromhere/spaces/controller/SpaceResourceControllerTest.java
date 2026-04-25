@@ -52,7 +52,7 @@ class SpaceResourceControllerTest {
     @Test
     void getAllSpaces_Returns200WithPageOfSpaces() throws Exception {
         // Given
-        SpaceResponseDTO space = buildResponseDTO(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, true);
+        SpaceResponseDTO space = buildResponseDTO(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, "wifi123");
         when(spaceResourceService.getAllSpaces(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(space)));
 
@@ -82,7 +82,7 @@ class SpaceResourceControllerTest {
     @Test
     void getSpaceById_WhenFound_Returns200() throws Exception {
         // Given
-        SpaceResponseDTO space = buildResponseDTO(42L, "The Hub", SpaceTypeResource.HOT_DESK, false);
+        SpaceResponseDTO space = buildResponseDTO(42L, "The Hub", SpaceTypeResource.HOT_DESK, null);
         when(spaceResourceService.getSpaceResourceById(42L)).thenReturn(space);
 
         // When / Then
@@ -112,8 +112,8 @@ class SpaceResourceControllerTest {
     @Test
     void createSpace_WhenValid_Returns201WithLocationHeader() throws Exception {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Monmouth Coffee", "Great coffee", 1, true, "wifi123");
-        SpaceResponseDTO response = buildResponseDTO(10L, "Monmouth Coffee", SpaceTypeResource.CAFE, true);
+        SpaceRequestDTO request = buildRequestDTO("Monmouth Coffee", "Great coffee", 1, "wifi123");
+        SpaceResponseDTO response = buildResponseDTO(10L, "Monmouth Coffee", SpaceTypeResource.CAFE, "wifi123");
         when(spaceResourceService.createSpaceResource(any(SpaceRequestDTO.class))).thenReturn(response);
 
         // When / Then
@@ -129,7 +129,7 @@ class SpaceResourceControllerTest {
     @Test
     void createSpace_WhenNameBlank_Returns400() throws Exception {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("", "Some description", 1, false, null);
+        SpaceRequestDTO request = buildRequestDTO("", "Some description", 1, null);
 
         // When / Then
         mockMvc.perform(post(BASE_URL)
@@ -143,7 +143,7 @@ class SpaceResourceControllerTest {
     @Test
     void createSpace_WhenDescriptionBlank_Returns400() throws Exception {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Valid Name", "", 1, false, null);
+        SpaceRequestDTO request = buildRequestDTO("Valid Name", "", 1, null);
 
         // When / Then
         mockMvc.perform(post(BASE_URL)
@@ -157,7 +157,7 @@ class SpaceResourceControllerTest {
     @Test
     void createSpace_WhenTypeIdNull_Returns400() throws Exception {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Valid Name", "Valid description", null, false, null);
+        SpaceRequestDTO request = buildRequestDTO("Valid Name", "Valid description", null, null);
 
         // When / Then
         mockMvc.perform(post(BASE_URL)
@@ -169,23 +169,9 @@ class SpaceResourceControllerTest {
     }
 
     @Test
-    void createSpace_WhenWifiAvailableButNoPassword_Returns400() throws Exception {
-        // Given
-        SpaceRequestDTO request = buildRequestDTO("Valid Name", "Valid description", 1, true, null);
-
-        // When / Then
-        mockMvc.perform(post(BASE_URL)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message", containsString("WiFi password is required when WiFi is available")));
-    }
-
-    @Test
     void createSpace_WhenWifiPasswordTooShort_Returns400() throws Exception {
-        // Given - empty string bypasses @NotBlank (field is not @NotBlank) but hits @Size(min=1)
-        SpaceRequestDTO request = buildRequestDTO("Valid Name", "Valid description", 1, true, "");
+        // Given
+        SpaceRequestDTO request = buildRequestDTO("Valid Name", "Valid description", 1, "");
 
         // When / Then
         mockMvc.perform(post(BASE_URL)
@@ -198,7 +184,7 @@ class SpaceResourceControllerTest {
     @Test
     void createSpace_WhenNameAlreadyExists_Returns409() throws Exception {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Duplicate Name", "Some description", 1, false, null);
+        SpaceRequestDTO request = buildRequestDTO("Duplicate Name", "Some description", 1, null);
         when(spaceResourceService.createSpaceResource(any(SpaceRequestDTO.class)))
                 .thenThrow(new SpaceResourceAlreadyExistsException("Space with name 'Duplicate Name' already exists"));
 
@@ -215,7 +201,7 @@ class SpaceResourceControllerTest {
     void createSpace_WhenNameExceedsMaxLength_Returns400() throws Exception {
         // Given
         String longName = "A".repeat(101);
-        SpaceRequestDTO request = buildRequestDTO(longName, "Valid description", 1, false, null);
+        SpaceRequestDTO request = buildRequestDTO(longName, "Valid description", 1, null);
 
         // When / Then
         mockMvc.perform(post(BASE_URL)
@@ -230,8 +216,8 @@ class SpaceResourceControllerTest {
     @Test
     void updateSpace_WhenValid_Returns200() throws Exception {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Updated Name", "Updated description", 2, false, null);
-        SpaceResponseDTO response = buildResponseDTO(5L, "Updated Name", SpaceTypeResource.HOT_DESK, false);
+        SpaceRequestDTO request = buildRequestDTO("Updated Name", "Updated description", 2, null);
+        SpaceResponseDTO response = buildResponseDTO(5L, "Updated Name", SpaceTypeResource.HOT_DESK, null);
         when(spaceResourceService.updateSpaceResource(any(SpaceRequestDTO.class), eq(5L))).thenReturn(response);
 
         // When / Then
@@ -247,7 +233,7 @@ class SpaceResourceControllerTest {
     @Test
     void updateSpace_WhenNotFound_Returns404() throws Exception {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Updated Name", "Updated description", 1, false, null);
+        SpaceRequestDTO request = buildRequestDTO("Updated Name", "Updated description", 1, null);
         when(spaceResourceService.updateSpaceResource(any(SpaceRequestDTO.class), eq(99L)))
                 .thenThrow(new SpaceResourceNotFoundException("Space with id 99 not found"));
 
@@ -262,7 +248,7 @@ class SpaceResourceControllerTest {
     @Test
     void updateSpace_WhenNameAlreadyExists_Returns409() throws Exception {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Taken Name", "Some description", 1, false, null);
+        SpaceRequestDTO request = buildRequestDTO("Taken Name", "Some description", 1, null);
         when(spaceResourceService.updateSpaceResource(any(SpaceRequestDTO.class), eq(5L)))
                 .thenThrow(new SpaceResourceAlreadyExistsException("Space with name 'Taken Name' already exists"));
 
@@ -278,7 +264,7 @@ class SpaceResourceControllerTest {
     @Test
     void updateSpace_WhenBodyInvalid_Returns400() throws Exception {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("", "", null, false, null);
+        SpaceRequestDTO request = buildRequestDTO("", "", null, null);
 
         // When / Then
         mockMvc.perform(put(BASE_URL + "/5")
@@ -315,25 +301,23 @@ class SpaceResourceControllerTest {
 
     // --- Helpers ---
 
-    private SpaceResponseDTO buildResponseDTO(Long id, String name, SpaceTypeResource type, boolean wifiAvailable) {
+    private SpaceResponseDTO buildResponseDTO(Long id, String name, SpaceTypeResource type, String wifiPassword) {
         return SpaceResponseDTO.builder()
                 .id(id)
                 .name(name)
                 .description("A nice place to work")
                 .type(type)
-                .wifiAvailable(wifiAvailable)
-                .wifiPassword(wifiAvailable ? "password123" : null)
+                .wifiPassword(wifiPassword)
                 .build();
     }
 
     private SpaceRequestDTO buildRequestDTO(
-            String name, String description, Integer typeId, boolean wifiAvailable, String wifiPassword)
+            String name, String description, Integer typeId, String wifiPassword)
     {
         return SpaceRequestDTO.builder()
                 .name(name)
                 .description(description)
                 .typeId(typeId)
-                .wifiAvailable(wifiAvailable)
                 .wifiPassword(wifiPassword)
                 .build();
     }
