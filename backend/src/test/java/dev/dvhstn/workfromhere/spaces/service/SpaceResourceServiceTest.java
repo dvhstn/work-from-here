@@ -41,8 +41,8 @@ class SpaceResourceServiceTest {
     @Test
     void getAllSpaces_WhenSpacesExist_ReturnsPageOfSpaces() {
         // Given
-        SpaceResource space = buildSpaceResource(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, true, "wifi123");
-        SpaceResponseDTO responseDTO = buildResponseDTO(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, true);
+        SpaceResource space = buildSpaceResource(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, "wifi123");
+        SpaceResponseDTO responseDTO = buildResponseDTO(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, "wifi123");
         when(spaceResourceRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(space)));
         when(spaceResourceMapper.toSpaceResponseDTO(space)).thenReturn(responseDTO);
 
@@ -71,8 +71,8 @@ class SpaceResourceServiceTest {
     @Test
     void getSpaceResourceById_WhenFound_ReturnsSpaceResponseDTO() {
         // Given
-        SpaceResource space = buildSpaceResource(1L, "The Hub", SpaceTypeResource.HOT_DESK, false, null);
-        SpaceResponseDTO responseDTO = buildResponseDTO(1L, "The Hub", SpaceTypeResource.HOT_DESK, false);
+        SpaceResource space = buildSpaceResource(1L, "The Hub", SpaceTypeResource.HOT_DESK, null);
+        SpaceResponseDTO responseDTO = buildResponseDTO(1L, "The Hub", SpaceTypeResource.HOT_DESK, null);
         when(spaceResourceRepository.findById(1L)).thenReturn(Optional.of(space));
         when(spaceResourceMapper.toSpaceResponseDTO(space)).thenReturn(responseDTO);
 
@@ -98,9 +98,9 @@ class SpaceResourceServiceTest {
     @Test
     void createSpaceResource_WhenNameIsUnique_ReturnsCreatedSpace() {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Monmouth Coffee", "Great coffee", 1, true, "wifi123");
-        SpaceResource entity = buildSpaceResource(null, "Monmouth Coffee", SpaceTypeResource.CAFE, true, "wifi123");
-        SpaceResponseDTO responseDTO = buildResponseDTO(10L, "Monmouth Coffee", SpaceTypeResource.CAFE, true);
+        SpaceRequestDTO request = buildRequestDTO("Monmouth Coffee", "Great coffee", 1, "wifi123");
+        SpaceResource entity = buildSpaceResource(null, "Monmouth Coffee", SpaceTypeResource.CAFE, "wifi123");
+        SpaceResponseDTO responseDTO = buildResponseDTO(10L, "Monmouth Coffee", SpaceTypeResource.CAFE, "wifi123");
         when(spaceResourceRepository.existsByName("Monmouth Coffee")).thenReturn(false);
         when(spaceResourceMapper.toSpaceResource(request)).thenReturn(entity);
         when(spaceResourceMapper.toSpaceResponseDTO(entity)).thenReturn(responseDTO);
@@ -116,7 +116,7 @@ class SpaceResourceServiceTest {
     @Test
     void createSpaceResource_WhenNameAlreadyExists_ThrowsSpaceResourceAlreadyExistsException() {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Duplicate Name", "Some description", 1, false, null);
+        SpaceRequestDTO request = buildRequestDTO("Duplicate Name", "Some description", 1, null);
         when(spaceResourceRepository.existsByName("Duplicate Name")).thenReturn(true);
 
         // When / Then
@@ -130,9 +130,9 @@ class SpaceResourceServiceTest {
     @Test
     void updateSpaceResource_WhenValidAndNameNotTaken_ReturnsUpdatedSpace() {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Updated Name", "Updated description", 2, false, null);
-        SpaceResource existing = buildSpaceResource(5L, "Old Name", SpaceTypeResource.CAFE, true, "oldwifi");
-        SpaceResponseDTO responseDTO = buildResponseDTO(5L, "Updated Name", SpaceTypeResource.HOT_DESK, false);
+        SpaceRequestDTO request = buildRequestDTO("Updated Name", "Updated description", 2, null);
+        SpaceResource existing = buildSpaceResource(5L, "Old Name", SpaceTypeResource.CAFE, "oldwifi");
+        SpaceResponseDTO responseDTO = buildResponseDTO(5L, "Updated Name", SpaceTypeResource.HOT_DESK, null);
         when(spaceResourceRepository.findById(5L)).thenReturn(Optional.of(existing));
         when(spaceResourceRepository.existsByNameAndIdNot("Updated Name", 5L)).thenReturn(false);
         when(spaceResourceMapper.toSpaceResponseDTO(existing)).thenReturn(responseDTO);
@@ -148,7 +148,7 @@ class SpaceResourceServiceTest {
     @Test
     void updateSpaceResource_WhenNotFound_ThrowsSpaceResourceNotFoundException() {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Updated Name", "Updated description", 1, false, null);
+        SpaceRequestDTO request = buildRequestDTO("Updated Name", "Updated description", 1, null);
         when(spaceResourceRepository.findById(99L)).thenReturn(Optional.empty());
 
         // When / Then
@@ -160,8 +160,8 @@ class SpaceResourceServiceTest {
     @Test
     void updateSpaceResource_WhenNameTakenByAnotherSpace_ThrowsSpaceResourceAlreadyExistsException() {
         // Given
-        SpaceRequestDTO request = buildRequestDTO("Taken Name", "Some description", 1, false, null);
-        SpaceResource existing = buildSpaceResource(5L, "Old Name", SpaceTypeResource.CAFE, false, null);
+        SpaceRequestDTO request = buildRequestDTO("Taken Name", "Some description", 1, null);
+        SpaceResource existing = buildSpaceResource(5L, "Old Name", SpaceTypeResource.CAFE, null);
         when(spaceResourceRepository.findById(5L)).thenReturn(Optional.of(existing));
         when(spaceResourceRepository.existsByNameAndIdNot("Taken Name", 5L)).thenReturn(true);
 
@@ -176,7 +176,7 @@ class SpaceResourceServiceTest {
     @Test
     void deleteSpaceResource_WhenFound_DeletesSpace() {
         // Given
-        SpaceResource space = buildSpaceResource(7L, "The Hub", SpaceTypeResource.HOT_DESK, false, null);
+        SpaceResource space = buildSpaceResource(7L, "The Hub", SpaceTypeResource.HOT_DESK, null);
         when(spaceResourceRepository.findById(7L)).thenReturn(Optional.of(space));
 
         // When
@@ -200,37 +200,34 @@ class SpaceResourceServiceTest {
     // --- Helpers ---
 
     private SpaceResource buildSpaceResource(
-            Long id, String name, SpaceTypeResource type, boolean wifiAvailable, String wifiPassword)
+            Long id, String name, SpaceTypeResource type, String wifiPassword)
     {
         return SpaceResource.builder()
                 .id(id)
                 .name(name)
                 .description("A nice place to work")
                 .type(type)
-                .wifiAvailable(wifiAvailable)
                 .wifiPassword(wifiPassword)
                 .build();
     }
 
-    private SpaceResponseDTO buildResponseDTO(Long id, String name, SpaceTypeResource type, boolean wifiAvailable) {
+    private SpaceResponseDTO buildResponseDTO(Long id, String name, SpaceTypeResource type, String wifiPassword) {
         return SpaceResponseDTO.builder()
                 .id(id)
                 .name(name)
                 .description("A nice place to work")
                 .type(type)
-                .wifiAvailable(wifiAvailable)
-                .wifiPassword(wifiAvailable ? "wifi123" : null)
+                .wifiPassword(wifiPassword)
                 .build();
     }
 
     private SpaceRequestDTO buildRequestDTO(
-            String name, String description, Integer typeId, boolean wifiAvailable, String wifiPassword)
+            String name, String description, Integer typeId, String wifiPassword)
     {
         return SpaceRequestDTO.builder()
                 .name(name)
                 .description(description)
                 .typeId(typeId)
-                .wifiAvailable(wifiAvailable)
                 .wifiPassword(wifiPassword)
                 .build();
     }

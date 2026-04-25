@@ -52,8 +52,8 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getAllSpaces_WhenPopulated_ReturnsAllSpaces() {
-        restTemplate.postForEntity(BASE_URL, buildRequest("Cafe One", "First cafe", 1, false, null), SpaceResponseDTO.class);
-        restTemplate.postForEntity(BASE_URL, buildRequest("Cafe Two", "Second cafe", 1, true, "pass123"), SpaceResponseDTO.class);
+        restTemplate.postForEntity(BASE_URL, buildRequest("Cafe One", "First cafe", 1, null), SpaceResponseDTO.class);
+        restTemplate.postForEntity(BASE_URL, buildRequest("Cafe Two", "Second cafe", 1, "pass123"), SpaceResponseDTO.class);
 
         ResponseEntity<RestPage<SpaceResponseDTO>> response = restTemplate.exchange(BASE_URL, HttpMethod.GET, null, PAGE_TYPE);
 
@@ -64,9 +64,9 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getAllSpaces_WithPageSize_ReturnsCorrectPage() {
-        restTemplate.postForEntity(BASE_URL, buildRequest("Space A", "Desc A", 1, false, null), SpaceResponseDTO.class);
-        restTemplate.postForEntity(BASE_URL, buildRequest("Space B", "Desc B", 1, false, null), SpaceResponseDTO.class);
-        restTemplate.postForEntity(BASE_URL, buildRequest("Space C", "Desc C", 1, false, null), SpaceResponseDTO.class);
+        restTemplate.postForEntity(BASE_URL, buildRequest("Space A", "Desc A", 1, null), SpaceResponseDTO.class);
+        restTemplate.postForEntity(BASE_URL, buildRequest("Space B", "Desc B", 1, null), SpaceResponseDTO.class);
+        restTemplate.postForEntity(BASE_URL, buildRequest("Space C", "Desc C", 1, null), SpaceResponseDTO.class);
 
         ResponseEntity<RestPage<SpaceResponseDTO>> response = restTemplate.exchange(
                 BASE_URL + "?page=0&size=2", HttpMethod.GET, null, PAGE_TYPE
@@ -82,7 +82,7 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void createSpace_WhenValid_Returns201AndPersists() {
-        SpaceRequestDTO request = buildRequest("Blue Bottle Coffee", "Great coffee spot", 1, false, null);
+        SpaceRequestDTO request = buildRequest("Blue Bottle Coffee", "Great coffee spot", 1, null);
 
         ResponseEntity<SpaceResponseDTO> response = restTemplate.postForEntity(BASE_URL, request, SpaceResponseDTO.class);
 
@@ -95,7 +95,7 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void createSpace_WhenWifiAvailable_PersistsPassword() {
-        SpaceRequestDTO request = buildRequest("The Hub", "Co-working space", 2, true, "wifi-pass-123");
+        SpaceRequestDTO request = buildRequest("The Hub", "Co-working space", 2, "wifi-pass-123");
 
         ResponseEntity<SpaceResponseDTO> response = restTemplate.postForEntity(BASE_URL, request, SpaceResponseDTO.class);
 
@@ -105,7 +105,7 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void createSpace_WhenWifiNotAvailable_PasswordIsNull() {
-        SpaceRequestDTO request = buildRequest("Silent Library", "Quiet work zone", 2, false, null);
+        SpaceRequestDTO request = buildRequest("Silent Library", "Quiet work zone", 2, null);
 
         ResponseEntity<SpaceResponseDTO> response = restTemplate.postForEntity(BASE_URL, request, SpaceResponseDTO.class);
 
@@ -115,7 +115,7 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void createSpace_WhenDuplicateName_Returns409() {
-        SpaceRequestDTO request = buildRequest("Duplicate Cafe", "First one", 1, false, null);
+        SpaceRequestDTO request = buildRequest("Duplicate Cafe", "First one", 1, null);
         restTemplate.postForEntity(BASE_URL, request, SpaceResponseDTO.class);
 
         ResponseEntity<String> duplicate = restTemplate.postForEntity(BASE_URL, request, String.class);
@@ -128,7 +128,7 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getSpaceById_WhenExists_Returns200() {
-        SpaceRequestDTO request = buildRequest("Monmouth Coffee", "Great espresso", 1, false, null);
+        SpaceRequestDTO request = buildRequest("Monmouth Coffee", "Great espresso", 1, null);
         SpaceResponseDTO created = restTemplate.postForEntity(BASE_URL, request, SpaceResponseDTO.class).getBody();
 
         ResponseEntity<SpaceResponseDTO> response = restTemplate.getForEntity(BASE_URL + "/" + created.getId(), SpaceResponseDTO.class);
@@ -149,10 +149,10 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     void updateSpace_WhenValid_Returns200AndUpdatesDb() {
         SpaceResponseDTO created = restTemplate.postForEntity(
-                BASE_URL, buildRequest("Original Name", "Original desc", 1, false, null), SpaceResponseDTO.class
+                BASE_URL, buildRequest("Original Name", "Original desc", 1, null), SpaceResponseDTO.class
         ).getBody();
 
-        SpaceRequestDTO update = buildRequest("Updated Name", "Updated desc", 2, true, "newpassword");
+        SpaceRequestDTO update = buildRequest("Updated Name", "Updated desc", 2, "newpassword");
         ResponseEntity<SpaceResponseDTO> response = restTemplate.exchange(
                 BASE_URL + "/" + created.getId(), HttpMethod.PUT, new HttpEntity<>(update), SpaceResponseDTO.class
         );
@@ -164,7 +164,7 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void updateSpace_WhenNotFound_Returns404() {
-        SpaceRequestDTO update = buildRequest("Any Name", "Any desc", 1, false, null);
+        SpaceRequestDTO update = buildRequest("Any Name", "Any desc", 1, null);
         ResponseEntity<String> response = restTemplate.exchange(
                 BASE_URL + "/999", HttpMethod.PUT, new HttpEntity<>(update), String.class
         );
@@ -177,7 +177,7 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     void deleteSpace_WhenExists_Returns204AndRemovesFromDb() {
         SpaceResponseDTO created = restTemplate.postForEntity(
-                BASE_URL, buildRequest("To Be Deleted", "Going away", 1, false, null), SpaceResponseDTO.class
+                BASE_URL, buildRequest("To Be Deleted", "Going away", 1, null), SpaceResponseDTO.class
         ).getBody();
 
         ResponseEntity<Void> response = restTemplate.exchange(
@@ -197,12 +197,11 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-    private SpaceRequestDTO buildRequest(String name, String description, int typeId, boolean wifiAvailable, String wifiPassword) {
+    private SpaceRequestDTO buildRequest(String name, String description, int typeId, String wifiPassword) {
         return SpaceRequestDTO.builder()
                 .name(name)
                 .description(description)
                 .typeId(typeId)
-                .wifiAvailable(wifiAvailable)
                 .wifiPassword(wifiPassword)
                 .build();
     }

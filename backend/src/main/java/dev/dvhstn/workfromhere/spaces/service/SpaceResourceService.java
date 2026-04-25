@@ -78,7 +78,6 @@ public class SpaceResourceService {
         originalSpaceResource.setName(updatedSpaceResource.getName());
         originalSpaceResource.setDescription(updatedSpaceResource.getDescription());
         originalSpaceResource.setType(SpaceTypeResource.getById(updatedSpaceResource.getTypeId()));
-        originalSpaceResource.setWifiAvailable(updatedSpaceResource.isWifiAvailable());
-        originalSpaceResource.setWifiPassword(updatedSpaceResource.isWifiAvailable() ? updatedSpaceResource.getWifiPassword() : null);
+        originalSpaceResource.setWifiPassword(updatedSpaceResource.getWifiPassword());
     }
 }

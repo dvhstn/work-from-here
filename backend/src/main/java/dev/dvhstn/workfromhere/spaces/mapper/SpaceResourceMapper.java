@@ -14,7 +14,6 @@ public class SpaceResourceMapper {
                 .name(space.getName())
                 .description(space.getDescription())
                 .type(space.getType())
-                .wifiAvailable(space.isWifiAvailable())
                 .wifiPassword(space.getWifiPassword())
                 .build();
     }
@@ -24,8 +23,7 @@ public class SpaceResourceMapper {
                 .name(spaceRequestDTO.getName())
                 .description(spaceRequestDTO.getDescription())
                 .type(SpaceTypeResource.getById(spaceRequestDTO.getTypeId()))
-                .wifiAvailable(spaceRequestDTO.isWifiAvailable())
-                .wifiPassword(spaceRequestDTO.isWifiAvailable() ? spaceRequestDTO.getWifiPassword() : null)
+                .wifiPassword(spaceRequestDTO.getWifiPassword())
                 .build();
     }
 }

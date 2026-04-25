@@ -16,7 +16,7 @@ public class SpaceResourceMapperTest {
     @Test
     void toSpaceResource_WhenSpaceRequestIsPassedIn_MapCorrectly() {
         // Given
-        SpaceRequestDTO expected = createMockSpaceRequestDTO("TestSpace", "Not a real place", 1, true, "Password123!");
+        SpaceRequestDTO expected = createMockSpaceRequestDTO("TestSpace", "Not a real place", 1, "Password123!");
 
         // When
         SpaceResource actual = mapper.toSpaceResource(expected);
@@ -26,15 +26,14 @@ public class SpaceResourceMapperTest {
                 ()-> assertEquals(expected.getName(), actual.getName()),
                 ()-> assertEquals(expected.getDescription(), actual.getDescription()),
                 ()-> assertEquals(expected.getTypeId(), actual.getType().getId()),
-                ()-> assertEquals(expected.isWifiAvailable(), actual.isWifiAvailable()),
                 ()-> assertEquals(expected.getWifiPassword(), actual.getWifiPassword())
         );
     }
 
     @Test
-    void toSpaceResource_WhenWifiNotAvailable_WifiPasswordIsNull() {
+    void toSpaceResource_WhenNoWifiPassword_WifiNotAvailable() {
         // Given
-        SpaceRequestDTO request = createMockSpaceRequestDTO("TestSpace", "Not a real place", 1, false, "ShouldBeDropped!");
+        SpaceRequestDTO request = createMockSpaceRequestDTO("TestSpace", "Not a real place", 1, null);
 
         // When
         SpaceResource actual = mapper.toSpaceResource(request);
@@ -50,7 +49,7 @@ public class SpaceResourceMapperTest {
     void toSpaceResponseDTO_whenSpaceIsPassedIn_MapCorrectly() {
         // Given
         SpaceResource expected = createMockSpaceResource(
-                123L,"TestSpace", "Not a real place", SpaceTypeResource.CAFE, true, "Password123!");
+                123L,"TestSpace", "Not a real place", SpaceTypeResource.CAFE, "Password123!");
 
         // When
         SpaceResponseDTO actual = mapper.toSpaceResponseDTO(expected);
@@ -67,26 +66,24 @@ public class SpaceResourceMapperTest {
     }
 
     private SpaceResource createMockSpaceResource(
-            Long id, String name, String description, SpaceTypeResource type, boolean wifiAvailable, String wifiPassword)
+            Long id, String name, String description, SpaceTypeResource type, String wifiPassword)
     {
         return SpaceResource.builder()
                 .id(id)
                 .name(name)
                 .description(description)
                 .type(type)
-                .wifiAvailable(wifiAvailable)
                 .wifiPassword(wifiPassword)
                 .build();
     }
 
     private SpaceRequestDTO createMockSpaceRequestDTO(
-            String name, String description, Integer typeId, boolean wifiAvailable, String wifiPassword)
+            String name, String description, Integer typeId, String wifiPassword)
     {
         return SpaceRequestDTO.builder()
                 .name(name)
                 .description(description)
                 .typeId(typeId)
-                .wifiAvailable(wifiAvailable)
                 .wifiPassword(wifiPassword)
                 .build();
     }
