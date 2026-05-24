@@ -60,7 +60,6 @@ public class SpaceResourceMapperTest {
                 ()-> assertEquals(expected.getName(), actual.getName()),
                 ()-> assertEquals(expected.getDescription(), actual.getDescription()),
                 ()-> assertEquals(expected.getType(), actual.getType()),
-                ()-> assertEquals(expected.isWifiAvailable(), actual.isWifiAvailable()),
                 ()-> assertEquals(expected.getWifiPassword(), actual.getWifiPassword())
         );
     }

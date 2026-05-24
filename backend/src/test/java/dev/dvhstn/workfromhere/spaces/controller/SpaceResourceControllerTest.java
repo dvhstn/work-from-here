@@ -91,7 +91,7 @@ class SpaceResourceControllerTest {
                 .andExpect(jsonPath("$.id").value(42L))
                 .andExpect(jsonPath("$.name").value("The Hub"))
                 .andExpect(jsonPath("$.type").value("HOT_DESK"))
-                .andExpect(jsonPath("$.wifiAvailable").value(false));
+                .andExpect(jsonPath("$.wifiPassword").doesNotExist());
     }
 
     @Test
