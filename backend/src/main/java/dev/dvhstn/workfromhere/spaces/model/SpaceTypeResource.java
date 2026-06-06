@@ -27,4 +27,13 @@ public enum SpaceTypeResource {
         }
         throw new SpaceTypeNotFoundException("Unknown space type id: " + id);
     }
+
+    public static SpaceTypeResource getByName(String name) {
+        for (SpaceTypeResource type : SpaceTypeResource.values()) {
+            if (type.name().equalsIgnoreCase(name)) {
+                return type;
+            }
+        }
+        throw new SpaceTypeNotFoundException("Unknown space type: " + name);
+    }
 }

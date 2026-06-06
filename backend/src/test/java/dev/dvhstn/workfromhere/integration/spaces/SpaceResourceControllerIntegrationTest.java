@@ -78,6 +78,45 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
         assertEquals(2, response.getBody().getTotalPages());
     }
 
+    // --- GET /api/v1/spaces (filtered) ---
+
+    @Test
+    void getAllSpaces_WithTypeFilter_ReturnsOnlyMatchingSpaces() {
+        restTemplate.postForEntity(BASE_URL, buildRequest("Cafe One", "A cafe", 1, null), SpaceResponseDTO.class);
+        restTemplate.postForEntity(BASE_URL, buildRequest("Hot Desk One", "A hot desk", 2, null), SpaceResponseDTO.class);
+
+        ResponseEntity<RestPage<SpaceResponseDTO>> response = restTemplate.exchange(
+                BASE_URL + "?type=cafe", HttpMethod.GET, null, PAGE_TYPE
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().getTotalElements());
+        assertEquals("Cafe One", response.getBody().getContent().get(0).getName());
+    }
+
+    @Test
+    void getAllSpaces_WithHasWifiFilter_ReturnsOnlyWifiSpaces() {
+        restTemplate.postForEntity(BASE_URL, buildRequest("Wifi Cafe", "Has wifi", 1, "pass123"), SpaceResponseDTO.class);
+        restTemplate.postForEntity(BASE_URL, buildRequest("No Wifi Cafe", "No wifi", 1, null), SpaceResponseDTO.class);
+
+        ResponseEntity<RestPage<SpaceResponseDTO>> response = restTemplate.exchange(
+                BASE_URL + "?hasWifi=true", HttpMethod.GET, null, PAGE_TYPE
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().getTotalElements());
+        assertEquals("Wifi Cafe", response.getBody().getContent().get(0).getName());
+    }
+
+    @Test
+    void getAllSpaces_WithInvalidType_Returns400() {
+        ResponseEntity<String> response = restTemplate.exchange(
+                BASE_URL + "?type=invalid", HttpMethod.GET, null, String.class
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
     // --- POST /api/v1/spaces ---
 
     @Test

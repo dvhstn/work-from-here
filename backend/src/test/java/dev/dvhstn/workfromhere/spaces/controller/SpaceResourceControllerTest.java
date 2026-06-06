@@ -1,6 +1,7 @@
 package dev.dvhstn.workfromhere.spaces.controller;
 
 import tools.jackson.databind.ObjectMapper;
+import dev.dvhstn.workfromhere.spaces.dto.SpaceFilterDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceRequestDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
 import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceAlreadyExistsException;
@@ -53,7 +54,7 @@ class SpaceResourceControllerTest {
     void getAllSpaces_Returns200WithPageOfSpaces() throws Exception {
         // Given
         SpaceResponseDTO space = buildResponseDTO(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, "wifi123");
-        when(spaceResourceService.getAllSpaces(any(Pageable.class)))
+        when(spaceResourceService.getAllSpaces(any(Pageable.class), any(SpaceFilterDTO.class)))
                 .thenReturn(new PageImpl<>(List.of(space)));
 
         // When / Then
@@ -67,7 +68,7 @@ class SpaceResourceControllerTest {
     @Test
     void getAllSpaces_WhenEmpty_Returns200WithEmptyPage() throws Exception {
         // Given
-        when(spaceResourceService.getAllSpaces(any(Pageable.class)))
+        when(spaceResourceService.getAllSpaces(any(Pageable.class), any(SpaceFilterDTO.class)))
                 .thenReturn(new PageImpl<>(List.of()));
 
         // When / Then
@@ -75,6 +76,20 @@ class SpaceResourceControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalElements").value(0))
                 .andExpect(jsonPath("$.content").isEmpty());
+    }
+
+    @Test
+    void getAllSpaces_WithTypeFilter_Returns200() throws Exception {
+        // Given
+        SpaceResponseDTO cafe = buildResponseDTO(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, null);
+        when(spaceResourceService.getAllSpaces(any(Pageable.class), any(SpaceFilterDTO.class)))
+                .thenReturn(new PageImpl<>(List.of(cafe)));
+
+        // When / Then
+        mockMvc.perform(get(BASE_URL).param("type", "cafe"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].type").value("CAFE"))
+                .andExpect(jsonPath("$.totalElements").value(1));
     }
 
     // --- GET /api/v1/spaces/{id} ---
