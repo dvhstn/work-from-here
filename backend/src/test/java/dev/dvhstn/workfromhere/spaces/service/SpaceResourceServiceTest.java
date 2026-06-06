@@ -1,5 +1,6 @@
 package dev.dvhstn.workfromhere.spaces.service;
 
+import dev.dvhstn.workfromhere.spaces.dto.SpaceFilterDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceRequestDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
 import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceAlreadyExistsException;
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,11 +45,11 @@ class SpaceResourceServiceTest {
         // Given
         SpaceResource space = buildSpaceResource(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, "wifi123");
         SpaceResponseDTO responseDTO = buildResponseDTO(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, "wifi123");
-        when(spaceResourceRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(space)));
+        when(spaceResourceRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(space)));
         when(spaceResourceMapper.toSpaceResponseDTO(space)).thenReturn(responseDTO);
 
         // When
-        Page<SpaceResponseDTO> result = spaceResourceService.getAllSpaces(Pageable.unpaged());
+        Page<SpaceResponseDTO> result = spaceResourceService.getAllSpaces(Pageable.unpaged(), new SpaceFilterDTO());
 
         // Then
         assertEquals(1, result.getTotalElements());
@@ -57,13 +59,30 @@ class SpaceResourceServiceTest {
     @Test
     void getAllSpaces_WhenNoSpacesExist_ReturnsEmptyPage() {
         // Given
-        when(spaceResourceRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of()));
+        when(spaceResourceRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(new PageImpl<>(List.of()));
 
         // When
-        Page<SpaceResponseDTO> result = spaceResourceService.getAllSpaces(Pageable.unpaged());
+        Page<SpaceResponseDTO> result = spaceResourceService.getAllSpaces(Pageable.unpaged(), new SpaceFilterDTO());
 
         // Then
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getAllSpaces_WithTypeFilter_ReturnsFilteredPage() {
+        // Given
+        SpaceResource cafe = buildSpaceResource(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, null);
+        SpaceResponseDTO responseDTO = buildResponseDTO(1L, "Blue Bottle Coffee", SpaceTypeResource.CAFE, null);
+        when(spaceResourceRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(cafe)));
+        when(spaceResourceMapper.toSpaceResponseDTO(cafe)).thenReturn(responseDTO);
+
+        // When
+        SpaceFilterDTO filter = SpaceFilterDTO.builder().type("cafe").build();
+        Page<SpaceResponseDTO> result = spaceResourceService.getAllSpaces(Pageable.unpaged(), filter);
+
+        // Then
+        assertEquals(1, result.getTotalElements());
+        assertEquals(SpaceTypeResource.CAFE, result.getContent().get(0).getType());
     }
 
     // --- getSpaceResourceById ---
@@ -183,7 +202,7 @@ class SpaceResourceServiceTest {
         spaceResourceService.deleteSpaceResource(7L);
 
         // Then
-        verify(spaceResourceRepository).delete(space);
+        verify(spaceResourceRepository).delete((SpaceResource) space);
     }
 
     @Test
@@ -194,7 +213,7 @@ class SpaceResourceServiceTest {
         // When / Then
         assertThrows(SpaceResourceNotFoundException.class,
                 () -> spaceResourceService.deleteSpaceResource(99L));
-        verify(spaceResourceRepository, never()).delete(any());
+        verify(spaceResourceRepository, never()).delete(any(SpaceResource.class));
     }
 
     // --- Helpers ---

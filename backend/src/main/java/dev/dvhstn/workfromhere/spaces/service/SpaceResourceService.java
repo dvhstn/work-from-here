@@ -1,5 +1,6 @@
 package dev.dvhstn.workfromhere.spaces.service;
 
+import dev.dvhstn.workfromhere.spaces.dto.SpaceFilterDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceRequestDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
 import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceAlreadyExistsException;
@@ -8,6 +9,7 @@ import dev.dvhstn.workfromhere.spaces.mapper.SpaceResourceMapper;
 import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.model.SpaceTypeResource;
 import dev.dvhstn.workfromhere.spaces.repository.SpaceResourceRepository;
+import dev.dvhstn.workfromhere.spaces.specification.SpaceResourceSpecification;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +26,9 @@ public class SpaceResourceService {
     private final SpaceResourceMapper spaceResourceMapper;
     private final SpaceResourceRepository spaceResourceRepository;
 
-    public Page<SpaceResponseDTO> getAllSpaces(Pageable pageable) {
-        log.debug("Fetching all spaces, page: {}", pageable);
-        return spaceResourceRepository.findAll(pageable)
+    public Page<SpaceResponseDTO> getAllSpaces(Pageable pageable, SpaceFilterDTO filter) {
+        log.debug("Fetching spaces with filter: {}, page: {}", filter, pageable);
+        return spaceResourceRepository.findAll(SpaceResourceSpecification.withFilter(filter), pageable)
                 .map(spaceResourceMapper::toSpaceResponseDTO);
     }
 

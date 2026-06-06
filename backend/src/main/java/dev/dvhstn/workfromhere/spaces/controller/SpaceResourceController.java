@@ -1,5 +1,6 @@
 package dev.dvhstn.workfromhere.spaces.controller;
 
+import dev.dvhstn.workfromhere.spaces.dto.SpaceFilterDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceRequestDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
 import dev.dvhstn.workfromhere.spaces.service.SpaceResourceService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -30,8 +32,10 @@ public class SpaceResourceController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<SpaceResponseDTO>> getAllSpaces(Pageable pageable) {
-        return ResponseEntity.ok(spaceResourceService.getAllSpaces(pageable));
+    public ResponseEntity<Page<SpaceResponseDTO>> getAllSpaces(
+            Pageable pageable,
+            @ModelAttribute SpaceFilterDTO filter) {
+        return ResponseEntity.ok(spaceResourceService.getAllSpaces(pageable, filter));
     }
 
     @GetMapping(value = "/{id}")
