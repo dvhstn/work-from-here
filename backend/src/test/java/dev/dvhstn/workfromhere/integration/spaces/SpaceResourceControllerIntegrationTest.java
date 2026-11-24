@@ -11,15 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
 
@@ -296,6 +300,103 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
         );
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    // --- Client errors ---
+
+    @Test
+    void getSpaceById_WhenIdNotNumeric_Returns400() {
+        ResponseEntity<Map<String, Object>> response = exchangeForError(BASE_URL + "/abc", HttpMethod.GET, null);
+
+        assertError(response, HttpStatus.BAD_REQUEST, "Invalid value for 'id'", BASE_URL + "/abc");
+    }
+
+    @Test
+    void createSpace_WhenJsonMalformed_Returns400() {
+        ResponseEntity<Map<String, Object>> response = exchangeForError(
+                BASE_URL, HttpMethod.POST, jsonEntity("{\"name\": \"Broken\","));
+
+        assertError(response, HttpStatus.BAD_REQUEST, "Malformed or unreadable request body", BASE_URL);
+        assertEquals(0, spaceResourceRepository.count());
+    }
+
+    @Test
+    void createSpace_WhenTypeIdUnknown_Returns400() {
+        ResponseEntity<Map<String, Object>> response = exchangeForError(
+                BASE_URL, HttpMethod.POST, new HttpEntity<>(buildRequest("Mystery Space", "Unknown type", 99, null)));
+
+        assertError(response, HttpStatus.BAD_REQUEST, "Unknown space type id: 99", BASE_URL);
+        assertEquals(0, spaceResourceRepository.count());
+    }
+
+    @Test
+    void createSpace_WhenContentTypeUnsupported_Returns415() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+
+        ResponseEntity<Map<String, Object>> response = exchangeForError(
+                BASE_URL, HttpMethod.POST, new HttpEntity<>("name=Cafe", headers));
+
+        assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, response.getStatusCode());
+        assertEquals(415, response.getBody().get("status"));
+        assertEquals(BASE_URL, response.getBody().get("path"));
+        assertTrue(((String) response.getBody().get("message")).startsWith("Content-Type 'text/plain"));
+    }
+
+    @Test
+    void getAllSpaces_WithInvalidSortProperty_Returns400() {
+        ResponseEntity<Map<String, Object>> response = exchangeForError(
+                BASE_URL + "?sort=bogus,asc", HttpMethod.GET, null);
+
+        assertError(response, HttpStatus.BAD_REQUEST, "Invalid sort property 'bogus'", BASE_URL);
+    }
+
+    @Test
+    void getAllSpaces_WithNonBooleanHasWifi_Returns400() {
+        ResponseEntity<Map<String, Object>> response = exchangeForError(
+                BASE_URL + "?hasWifi=maybe", HttpMethod.GET, null);
+
+        assertError(response, HttpStatus.BAD_REQUEST, "Invalid value for 'hasWifi'", BASE_URL);
+    }
+
+    @Test
+    void deleteCollection_WhenMethodNotSupported_Returns405() {
+        ResponseEntity<Map<String, Object>> response = exchangeForError(BASE_URL, HttpMethod.DELETE, null);
+
+        assertError(response, HttpStatus.METHOD_NOT_ALLOWED, "Method 'DELETE' is not supported.", BASE_URL);
+        assertNotNull(response.getHeaders().getAllow());
+        assertTrue(response.getHeaders().getAllow().contains(HttpMethod.GET));
+    }
+
+    @Test
+    void unknownRoute_Returns404() {
+        ResponseEntity<Map<String, Object>> response = exchangeForError("/api/v1/does-not-exist", HttpMethod.GET, null);
+
+        assertError(response, HttpStatus.NOT_FOUND, "Resource not found", "/api/v1/does-not-exist");
+    }
+
+    private static final ParameterizedTypeReference<Map<String, Object>> ERROR_TYPE =
+            new ParameterizedTypeReference<>() {};
+
+    private ResponseEntity<Map<String, Object>> exchangeForError(String url, HttpMethod method, HttpEntity<?> entity) {
+        return restTemplate.exchange(url, method, entity, ERROR_TYPE);
+    }
+
+    private static HttpEntity<String> jsonEntity(String body) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new HttpEntity<>(body, headers);
+    }
+
+    private static void assertError(
+            ResponseEntity<Map<String, Object>> response, HttpStatus status, String message, String path)
+    {
+        assertEquals(status, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(status.value(), response.getBody().get("status"));
+        assertEquals(message, response.getBody().get("message"));
+        assertEquals(path, response.getBody().get("path"));
+        assertNotNull(response.getBody().get("timestamp"));
     }
 
     private SpaceRequestDTO buildRequest(String name, String description, int typeId, String wifiPassword) {

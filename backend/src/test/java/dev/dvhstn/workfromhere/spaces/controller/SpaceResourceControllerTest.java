@@ -6,10 +6,15 @@ import dev.dvhstn.workfromhere.spaces.dto.SpaceRequestDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
 import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceAlreadyExistsException;
 import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceNotFoundException;
+import dev.dvhstn.workfromhere.spaces.exception.SpaceTypeNotFoundException;
+import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.model.SpaceTypeResource;
 import dev.dvhstn.workfromhere.spaces.service.SpaceResourceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.core.TypeInformation;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,13 +26,16 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -326,6 +334,144 @@ class SpaceResourceControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.message").value("Space with id 99 not found"));
+    }
+
+    // --- Client errors raised by Spring MVC / persistence ---
+
+    @Test
+    void getSpaceById_WhenIdNotNumeric_Returns400() throws Exception {
+        mockMvc.perform(get(BASE_URL + "/abc"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Invalid value for 'id'"))
+                .andExpect(jsonPath("$.path").value(BASE_URL + "/abc"))
+                .andExpect(jsonPath("$.timestamp").exists());
+
+        verifyNoInteractions(spaceResourceService);
+    }
+
+    @Test
+    void createSpace_WhenJsonMalformed_Returns400() throws Exception {
+        mockMvc.perform(post(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"Broken\","))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Malformed or unreadable request body"))
+                .andExpect(jsonPath("$.path").value(BASE_URL));
+
+        verifyNoInteractions(spaceResourceService);
+    }
+
+    @Test
+    void createSpace_WhenTypeIdNotNumeric_Returns400WithoutLeakingTypes() throws Exception {
+        mockMvc.perform(post(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"N\", \"description\": \"D\", \"typeId\": \"abc\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message", not(containsString("java."))));
+    }
+
+    @Test
+    void createSpace_WhenTypeIdUnknown_Returns400() throws Exception {
+        // Given
+        SpaceRequestDTO request = buildRequestDTO("Valid Name", "Valid description", 99, null);
+        when(spaceResourceService.createSpaceResource(any(SpaceRequestDTO.class)))
+                .thenThrow(new SpaceTypeNotFoundException("Unknown space type id: 99"));
+
+        // When / Then
+        mockMvc.perform(post(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Unknown space type id: 99"));
+    }
+
+    @Test
+    void createSpace_WhenContentTypeUnsupported_Returns415() throws Exception {
+        mockMvc.perform(post(BASE_URL)
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content("name=Cafe"))
+                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(jsonPath("$.status").value(415))
+                .andExpect(jsonPath("$.message", containsString("Content-Type 'text/plain")))
+                .andExpect(jsonPath("$.path").value(BASE_URL));
+
+        verifyNoInteractions(spaceResourceService);
+    }
+
+    @Test
+    void getAllSpaces_WhenSortPropertyInvalid_Returns400() throws Exception {
+        // Given
+        when(spaceResourceService.getAllSpaces(any(Pageable.class), any(SpaceFilterDTO.class)))
+                .thenThrow(new PropertyReferenceException("bogus", TypeInformation.of(SpaceResource.class), List.of()));
+
+        // When / Then
+        mockMvc.perform(get(BASE_URL).param("sort", "bogus,asc"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Invalid sort property 'bogus'"));
+    }
+
+    @Test
+    void getAllSpaces_WhenHasWifiNotBoolean_Returns400() throws Exception {
+        mockMvc.perform(get(BASE_URL).param("hasWifi", "maybe"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Invalid value for 'hasWifi'"));
+
+        verifyNoInteractions(spaceResourceService);
+    }
+
+    @Test
+    void patchSpace_WhenMethodNotSupported_Returns405() throws Exception {
+        mockMvc.perform(patch(BASE_URL + "/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(header().exists("Allow"))
+                .andExpect(jsonPath("$.status").value(405))
+                .andExpect(jsonPath("$.message").value("Method 'PATCH' is not supported."))
+                .andExpect(jsonPath("$.path").value(BASE_URL + "/1"));
+    }
+
+    @Test
+    void unknownRoute_Returns404() throws Exception {
+        mockMvc.perform(get("/api/v1/does-not-exist"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("Resource not found"))
+                .andExpect(jsonPath("$.path").value("/api/v1/does-not-exist"));
+    }
+
+    @Test
+    void createSpace_WhenDataIntegrityViolated_Returns409() throws Exception {
+        // Given
+        SpaceRequestDTO request = buildRequestDTO("Valid Name", "Valid description", 1, null);
+        when(spaceResourceService.createSpaceResource(any(SpaceRequestDTO.class)))
+                .thenThrow(new DataIntegrityViolationException("constraint violated"));
+
+        // When / Then
+        mockMvc.perform(post(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.message").value("Request conflicts with existing data"));
+    }
+
+    @Test
+    void getSpaceById_WhenUnexpectedError_Returns500WithGenericMessage() throws Exception {
+        // Given
+        when(spaceResourceService.getSpaceResourceById(1L)).thenThrow(new IllegalStateException("boom"));
+
+        // When / Then
+        mockMvc.perform(get(BASE_URL + "/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.message").value("An unexpected error occurred"));
     }
 
     // --- Helpers ---
