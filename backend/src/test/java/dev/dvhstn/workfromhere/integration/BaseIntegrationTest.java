@@ -3,25 +3,25 @@ package dev.dvhstn.workfromhere.integration;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.postgresql.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+/**
+ * Base class for integration tests. Uses a single Postgres container shared by every
+ * subclass for the whole test run: it is started once in a static initialiser and left
+ * for Testcontainers' Ryuk to clean up, so the cached Spring context stays valid across
+ * test classes. The application runs with the main application.yaml (Flyway migrations
+ * plus ddl-auto: validate); only the datasource connection details come from the container.
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestRestTemplate
-@Testcontainers
 public abstract class BaseIntegrationTest {
 
-    @Container
-    static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:16");
+    @ServiceConnection
+    static final PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:16");
 
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
+    static {
+        postgres.start();
     }
 
     @LocalServerPort
