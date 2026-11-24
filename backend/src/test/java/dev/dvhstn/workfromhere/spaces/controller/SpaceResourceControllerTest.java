@@ -205,6 +205,20 @@ class SpaceResourceControllerTest {
     }
 
     @Test
+    void createSpace_WhenWifiPasswordBlank_Returns400() throws Exception {
+        // Given
+        SpaceRequestDTO request = buildRequestDTO("Valid Name", "Valid description", 1, "   ");
+
+        // When / Then
+        mockMvc.perform(post(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message", containsString("WiFi password must not be blank")));
+    }
+
+    @Test
     void createSpace_WhenNameAlreadyExists_Returns409() throws Exception {
         // Given
         SpaceRequestDTO request = buildRequestDTO("Duplicate Name", "Some description", 1, null);

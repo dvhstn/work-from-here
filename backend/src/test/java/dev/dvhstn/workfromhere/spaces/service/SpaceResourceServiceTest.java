@@ -121,8 +121,8 @@ class SpaceResourceServiceTest {
         SpaceRequestDTO request = buildRequestDTO("Monmouth Coffee", "Great coffee", 1, "wifi123");
         SpaceResource entity = buildSpaceResource(null, "Monmouth Coffee", SpaceTypeResource.CAFE, "wifi123");
         SpaceResponseDTO responseDTO = buildResponseDTO(10L, "Monmouth Coffee", SpaceTypeResource.CAFE, "wifi123");
-        when(spaceResourceRepository.existsByName("Monmouth Coffee")).thenReturn(false);
         when(spaceResourceMapper.toSpaceResource(request)).thenReturn(entity);
+        when(spaceResourceRepository.existsByNameIgnoreCase("Monmouth Coffee")).thenReturn(false);
         when(spaceResourceMapper.toSpaceResponseDTO(entity)).thenReturn(responseDTO);
 
         // When
@@ -137,7 +137,9 @@ class SpaceResourceServiceTest {
     void createSpaceResource_WhenNameAlreadyExists_ThrowsSpaceResourceAlreadyExistsException() {
         // Given
         SpaceRequestDTO request = buildRequestDTO("Duplicate Name", "Some description", 1, null);
-        when(spaceResourceRepository.existsByName("Duplicate Name")).thenReturn(true);
+        SpaceResource entity = buildSpaceResource(null, "Duplicate Name", SpaceTypeResource.CAFE, null);
+        when(spaceResourceMapper.toSpaceResource(request)).thenReturn(entity);
+        when(spaceResourceRepository.existsByNameIgnoreCase("Duplicate Name")).thenReturn(true);
 
         // When / Then
         assertThrows(SpaceResourceAlreadyExistsException.class,
@@ -146,12 +148,27 @@ class SpaceResourceServiceTest {
     }
 
     @Test
+    void createSpaceResource_WhenNameExistsWithDifferentCase_ThrowsSpaceResourceAlreadyExistsException() {
+        // Given
+        SpaceRequestDTO request = buildRequestDTO("  monmouth COFFEE ", "Some description", 1, null);
+        SpaceResource entity = buildSpaceResource(null, "monmouth COFFEE", SpaceTypeResource.CAFE, null);
+        when(spaceResourceMapper.toSpaceResource(request)).thenReturn(entity);
+        when(spaceResourceRepository.existsByNameIgnoreCase("monmouth COFFEE")).thenReturn(true);
+
+        // When / Then
+        SpaceResourceAlreadyExistsException ex = assertThrows(SpaceResourceAlreadyExistsException.class,
+                () -> spaceResourceService.createSpaceResource(request));
+        assertEquals("Space with name 'monmouth COFFEE' already exists", ex.getMessage());
+        verify(spaceResourceRepository, never()).saveAndFlush(any());
+    }
+
+    @Test
     void createSpaceResource_WhenSaveViolatesUniqueConstraint_ThrowsSpaceResourceAlreadyExistsException() {
-        // Given: a concurrent request inserted the same name after the existsByName check
+        // Given: a concurrent request inserted the same name after the existsByNameIgnoreCase check
         SpaceRequestDTO request = buildRequestDTO("Race Cafe", "Some description", 1, null);
         SpaceResource entity = buildSpaceResource(null, "Race Cafe", SpaceTypeResource.CAFE, null);
-        when(spaceResourceRepository.existsByName("Race Cafe")).thenReturn(false);
         when(spaceResourceMapper.toSpaceResource(request)).thenReturn(entity);
+        when(spaceResourceRepository.existsByNameIgnoreCase("Race Cafe")).thenReturn(false);
         when(spaceResourceRepository.saveAndFlush(entity))
                 .thenThrow(new DataIntegrityViolationException("duplicate key value violates unique constraint"));
 
@@ -169,9 +186,11 @@ class SpaceResourceServiceTest {
         // Given
         SpaceRequestDTO request = buildRequestDTO("Updated Name", "Updated description", 2, null);
         SpaceResource existing = buildSpaceResource(5L, "Old Name", SpaceTypeResource.CAFE, "oldwifi");
+        SpaceResource mapped = buildSpaceResource(null, "Updated Name", SpaceTypeResource.HOT_DESK, null);
         SpaceResponseDTO responseDTO = buildResponseDTO(5L, "Updated Name", SpaceTypeResource.HOT_DESK, null);
         when(spaceResourceRepository.findById(5L)).thenReturn(Optional.of(existing));
-        when(spaceResourceRepository.existsByNameAndIdNot("Updated Name", 5L)).thenReturn(false);
+        when(spaceResourceMapper.toSpaceResource(request)).thenReturn(mapped);
+        when(spaceResourceRepository.existsByNameIgnoreCaseAndIdNot("Updated Name", 5L)).thenReturn(false);
         when(spaceResourceMapper.toSpaceResponseDTO(existing)).thenReturn(responseDTO);
 
         // When
@@ -179,6 +198,9 @@ class SpaceResourceServiceTest {
 
         // Then
         assertEquals(responseDTO, result);
+        assertEquals("Updated Name", existing.getName());
+        assertEquals(SpaceTypeResource.HOT_DESK, existing.getType());
+        assertNull(existing.getWifiPassword());
         verify(spaceResourceRepository).saveAndFlush(existing);
     }
 
@@ -199,8 +221,27 @@ class SpaceResourceServiceTest {
         // Given
         SpaceRequestDTO request = buildRequestDTO("Taken Name", "Some description", 1, null);
         SpaceResource existing = buildSpaceResource(5L, "Old Name", SpaceTypeResource.CAFE, null);
+        SpaceResource mapped = buildSpaceResource(null, "Taken Name", SpaceTypeResource.CAFE, null);
         when(spaceResourceRepository.findById(5L)).thenReturn(Optional.of(existing));
-        when(spaceResourceRepository.existsByNameAndIdNot("Taken Name", 5L)).thenReturn(true);
+        when(spaceResourceMapper.toSpaceResource(request)).thenReturn(mapped);
+        when(spaceResourceRepository.existsByNameIgnoreCaseAndIdNot("Taken Name", 5L)).thenReturn(true);
+
+        // When / Then
+        assertThrows(SpaceResourceAlreadyExistsException.class,
+                () -> spaceResourceService.updateSpaceResource(request, 5L));
+        assertEquals("Old Name", existing.getName());
+        verify(spaceResourceRepository, never()).saveAndFlush(any());
+    }
+
+    @Test
+    void updateSpaceResource_WhenNameTakenByAnotherSpaceWithDifferentCase_ThrowsSpaceResourceAlreadyExistsException() {
+        // Given
+        SpaceRequestDTO request = buildRequestDTO("TAKEN name", "Some description", 1, null);
+        SpaceResource existing = buildSpaceResource(5L, "Old Name", SpaceTypeResource.CAFE, null);
+        SpaceResource mapped = buildSpaceResource(null, "TAKEN name", SpaceTypeResource.CAFE, null);
+        when(spaceResourceRepository.findById(5L)).thenReturn(Optional.of(existing));
+        when(spaceResourceMapper.toSpaceResource(request)).thenReturn(mapped);
+        when(spaceResourceRepository.existsByNameIgnoreCaseAndIdNot("TAKEN name", 5L)).thenReturn(true);
 
         // When / Then
         assertThrows(SpaceResourceAlreadyExistsException.class,
@@ -210,11 +251,13 @@ class SpaceResourceServiceTest {
 
     @Test
     void updateSpaceResource_WhenSaveViolatesUniqueConstraint_ThrowsSpaceResourceAlreadyExistsException() {
-        // Given: a concurrent request took the name after the existsByNameAndIdNot check
+        // Given: a concurrent request took the name after the existsByNameIgnoreCaseAndIdNot check
         SpaceRequestDTO request = buildRequestDTO("Race Cafe", "Some description", 1, null);
         SpaceResource existing = buildSpaceResource(5L, "Old Name", SpaceTypeResource.CAFE, null);
+        SpaceResource mapped = buildSpaceResource(null, "Race Cafe", SpaceTypeResource.CAFE, null);
         when(spaceResourceRepository.findById(5L)).thenReturn(Optional.of(existing));
-        when(spaceResourceRepository.existsByNameAndIdNot("Race Cafe", 5L)).thenReturn(false);
+        when(spaceResourceMapper.toSpaceResource(request)).thenReturn(mapped);
+        when(spaceResourceRepository.existsByNameIgnoreCaseAndIdNot("Race Cafe", 5L)).thenReturn(false);
         when(spaceResourceRepository.saveAndFlush(existing))
                 .thenThrow(new DataIntegrityViolationException("duplicate key value violates unique constraint"));
 

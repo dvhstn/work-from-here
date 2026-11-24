@@ -167,6 +167,38 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
         assertEquals(1, spaceResourceRepository.count());
     }
 
+    @Test
+    void createSpace_WhenDuplicateNameDiffersOnlyByCaseAndWhitespace_Returns409() {
+        restTemplate.postForEntity(BASE_URL, buildRequest("Duplicate Cafe", "First one", 1, null), SpaceResponseDTO.class);
+
+        ResponseEntity<String> duplicate = restTemplate.postForEntity(
+                BASE_URL, buildRequest("  duplicate CAFE ", "Second one", 1, null), String.class);
+
+        assertEquals(HttpStatus.CONFLICT, duplicate.getStatusCode());
+        assertEquals(1, spaceResourceRepository.count());
+    }
+
+    @Test
+    void createSpace_WhenFieldsHaveSurroundingWhitespace_PersistsTrimmedValues() {
+        SpaceRequestDTO request = buildRequest("  Padded Cafe  ", "  Padded desc ", 1, " secret ");
+
+        ResponseEntity<SpaceResponseDTO> response = restTemplate.postForEntity(BASE_URL, request, SpaceResponseDTO.class);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals("Padded Cafe", response.getBody().getName());
+        assertEquals("Padded desc", response.getBody().getDescription());
+        assertEquals("secret", response.getBody().getWifiPassword());
+    }
+
+    @Test
+    void createSpace_WhenWifiPasswordBlank_Returns400() {
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                BASE_URL, buildRequest("Blank Wifi", "Desc", 1, "   "), String.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(0, spaceResourceRepository.count());
+    }
+
     // --- GET /api/v1/spaces/{id} ---
 
     @Test
@@ -203,6 +235,36 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Updated Name", response.getBody().getName());
         assertEquals("newpassword", response.getBody().getWifiPassword());
+    }
+
+    @Test
+    void updateSpace_WhenNameTakenByAnotherSpaceIgnoringCase_Returns409() {
+        restTemplate.postForEntity(BASE_URL, buildRequest("Taken Name", "Desc", 1, null), SpaceResponseDTO.class);
+        SpaceResponseDTO other = restTemplate.postForEntity(
+                BASE_URL, buildRequest("Other Name", "Desc", 1, null), SpaceResponseDTO.class
+        ).getBody();
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                BASE_URL + "/" + other.getId(), HttpMethod.PUT,
+                new HttpEntity<>(buildRequest("TAKEN name", "Desc", 1, null)), String.class
+        );
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+    }
+
+    @Test
+    void updateSpace_WhenChangingCaseOfOwnName_Returns200() {
+        SpaceResponseDTO created = restTemplate.postForEntity(
+                BASE_URL, buildRequest("My Space", "Desc", 1, null), SpaceResponseDTO.class
+        ).getBody();
+
+        ResponseEntity<SpaceResponseDTO> response = restTemplate.exchange(
+                BASE_URL + "/" + created.getId(), HttpMethod.PUT,
+                new HttpEntity<>(buildRequest("MY SPACE", "Desc", 1, null)), SpaceResponseDTO.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("MY SPACE", response.getBody().getName());
     }
 
     @Test
