@@ -20,10 +20,14 @@ public class SpaceResourceMapper {
 
     public SpaceResource toSpaceResource(SpaceRequestDTO spaceRequestDTO) {
         return SpaceResource.builder()
-                .name(spaceRequestDTO.getName())
-                .description(spaceRequestDTO.getDescription())
+                .name(trim(spaceRequestDTO.getName()))
+                .description(trim(spaceRequestDTO.getDescription()))
                 .type(SpaceTypeResource.getById(spaceRequestDTO.getTypeId()))
-                .wifiPassword(spaceRequestDTO.getWifiPassword())
+                .wifiPassword(trim(spaceRequestDTO.getWifiPassword()))
                 .build();
+    }
+
+    private static String trim(String value) {
+        return value == null ? null : value.trim();
     }
 }

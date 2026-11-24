@@ -2,6 +2,7 @@ package dev.dvhstn.workfromhere.spaces.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
@@ -25,5 +26,6 @@ public class SpaceRequestDTO {
     private Integer typeId;
 
     @Size(min = 1, max = 100, message = "WiFi password must be between 1 and 100 characters")
+    @Pattern(regexp = "(?s).*\\S.*", message = "WiFi password must not be blank")
     private String wifiPassword;
 }

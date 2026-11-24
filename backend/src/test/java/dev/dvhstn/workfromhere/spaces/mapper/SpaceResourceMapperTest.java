@@ -46,6 +46,23 @@ public class SpaceResourceMapperTest {
     }
 
     @Test
+    void toSpaceResource_WhenFieldsHaveSurroundingWhitespace_TrimsThem() {
+        // Given
+        SpaceRequestDTO request = createMockSpaceRequestDTO("  TestSpace \t", "\n Not a real place  ", 2, "  Password123!  ");
+
+        // When
+        SpaceResource actual = mapper.toSpaceResource(request);
+
+        // Then
+        assertAll(
+                () -> assertEquals("TestSpace", actual.getName()),
+                () -> assertEquals("Not a real place", actual.getDescription()),
+                () -> assertEquals(SpaceTypeResource.HOT_DESK, actual.getType()),
+                () -> assertEquals("Password123!", actual.getWifiPassword())
+        );
+    }
+
+    @Test
     void toSpaceResponseDTO_whenSpaceIsPassedIn_MapCorrectly() {
         // Given
         SpaceResource expected = createMockSpaceResource(
