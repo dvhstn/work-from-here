@@ -13,6 +13,7 @@ import dev.dvhstn.workfromhere.spaces.specification.SpaceResourceSpecification;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class SpaceResourceService {
         }
 
         SpaceResource mappedSpaceResource = spaceResourceMapper.toSpaceResource(spaceResource);
-        spaceResourceRepository.saveAndFlush(mappedSpaceResource);
+        saveAndFlush(mappedSpaceResource);
 
         log.info("Created space '{}' with id {}", mappedSpaceResource.getName(), mappedSpaceResource.getId());
         return spaceResourceMapper.toSpaceResponseDTO(mappedSpaceResource);
@@ -62,7 +63,7 @@ public class SpaceResourceService {
         }
 
         updateSpace(updatedSpaceResource, originalSpaceResource);
-        spaceResourceRepository.saveAndFlush(originalSpaceResource);
+        saveAndFlush(originalSpaceResource);
 
         log.info("Updated space id {}", id);
         return spaceResourceMapper.toSpaceResponseDTO(originalSpaceResource);
@@ -74,6 +75,19 @@ public class SpaceResourceService {
                 .orElseThrow(() -> new SpaceResourceNotFoundException("Space with id " + id + " not found"));
         spaceResourceRepository.delete(spaceToDelete);
         log.info("Deleted space '{}' with id {}", spaceToDelete.getName(), id);
+    }
+
+    /**
+     * The existsByName checks above don't stop two concurrent requests claiming the same name, so the
+     * database unique constraint is the final guard; surface its violation as a conflict.
+     */
+    private void saveAndFlush(SpaceResource spaceResource) {
+        try {
+            spaceResourceRepository.saveAndFlush(spaceResource);
+        } catch (DataIntegrityViolationException ex) {
+            log.warn("Integrity violation saving space '{}': {}", spaceResource.getName(), ex.getMostSpecificCause().getMessage());
+            throw new SpaceResourceAlreadyExistsException("Space with name '" + spaceResource.getName() + "' already exists");
+        }
     }
 
     private void updateSpace(SpaceRequestDTO updatedSpaceResource, SpaceResource originalSpaceResource) {

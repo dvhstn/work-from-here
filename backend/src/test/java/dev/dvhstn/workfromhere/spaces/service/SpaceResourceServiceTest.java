@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -144,6 +145,23 @@ class SpaceResourceServiceTest {
         verify(spaceResourceRepository, never()).saveAndFlush(any());
     }
 
+    @Test
+    void createSpaceResource_WhenSaveViolatesUniqueConstraint_ThrowsSpaceResourceAlreadyExistsException() {
+        // Given: a concurrent request inserted the same name after the existsByName check
+        SpaceRequestDTO request = buildRequestDTO("Race Cafe", "Some description", 1, null);
+        SpaceResource entity = buildSpaceResource(null, "Race Cafe", SpaceTypeResource.CAFE, null);
+        when(spaceResourceRepository.existsByName("Race Cafe")).thenReturn(false);
+        when(spaceResourceMapper.toSpaceResource(request)).thenReturn(entity);
+        when(spaceResourceRepository.saveAndFlush(entity))
+                .thenThrow(new DataIntegrityViolationException("duplicate key value violates unique constraint"));
+
+        // When / Then
+        SpaceResourceAlreadyExistsException ex = assertThrows(SpaceResourceAlreadyExistsException.class,
+                () -> spaceResourceService.createSpaceResource(request));
+        assertEquals("Space with name 'Race Cafe' already exists", ex.getMessage());
+        verify(spaceResourceMapper, never()).toSpaceResponseDTO(any());
+    }
+
     // --- updateSpaceResource ---
 
     @Test
@@ -188,6 +206,23 @@ class SpaceResourceServiceTest {
         assertThrows(SpaceResourceAlreadyExistsException.class,
                 () -> spaceResourceService.updateSpaceResource(request, 5L));
         verify(spaceResourceRepository, never()).saveAndFlush(any());
+    }
+
+    @Test
+    void updateSpaceResource_WhenSaveViolatesUniqueConstraint_ThrowsSpaceResourceAlreadyExistsException() {
+        // Given: a concurrent request took the name after the existsByNameAndIdNot check
+        SpaceRequestDTO request = buildRequestDTO("Race Cafe", "Some description", 1, null);
+        SpaceResource existing = buildSpaceResource(5L, "Old Name", SpaceTypeResource.CAFE, null);
+        when(spaceResourceRepository.findById(5L)).thenReturn(Optional.of(existing));
+        when(spaceResourceRepository.existsByNameAndIdNot("Race Cafe", 5L)).thenReturn(false);
+        when(spaceResourceRepository.saveAndFlush(existing))
+                .thenThrow(new DataIntegrityViolationException("duplicate key value violates unique constraint"));
+
+        // When / Then
+        SpaceResourceAlreadyExistsException ex = assertThrows(SpaceResourceAlreadyExistsException.class,
+                () -> spaceResourceService.updateSpaceResource(request, 5L));
+        assertEquals("Space with name 'Race Cafe' already exists", ex.getMessage());
+        verify(spaceResourceMapper, never()).toSpaceResponseDTO(any());
     }
 
     // --- deleteSpaceResource ---
