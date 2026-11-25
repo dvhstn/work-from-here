@@ -8,7 +8,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { cn } from '@/lib/utils'
 import { BackToListLink } from '../components/BackToListLink'
-import { SpaceTypeBadge, SpaceTypeTile } from '../components/SpaceTypeBadge'
+import { PhotoCredit } from '../components/PhotoCredit'
+import { SpaceImage } from '../components/SpaceImage'
+import { SpaceTypeBadge } from '../components/SpaceTypeBadge'
 import { WifiPasswordPanel } from '../components/WifiPasswordPanel'
 import { useSpace } from '../hooks/useSpace'
 import { parseSpaceId } from '../navigation'
@@ -24,6 +26,39 @@ const headingText: Record<Exclude<View['kind'], 'ready' | 'loading'>, string> = 
   error: "Couldn't load this space",
 }
 
+/** The hero spans the `max-w-3xl` column: 4:3 on mobile, 21:9 from `md`. */
+const HERO_SIZES = '(min-width: 51rem) 768px, calc(100vw - 2rem)'
+const HERO_WIDTHS = [400, 800, 1200, 1600] as const
+const HERO_FRAME = 'rounded-lg border'
+
+function Hero({ view }: { view: View }) {
+  if (view.kind === 'loading') {
+    return <Skeleton className={cn('aspect-[4/3] md:aspect-[21/9]', HERO_FRAME)} />
+  }
+  if (view.kind !== 'ready') return null
+  const { space } = view
+  return (
+    <figure className="space-y-2">
+      <SpaceImage
+        image={space.image}
+        type={space.type}
+        ratio={4 / 3}
+        wideRatio={21 / 9}
+        widths={HERO_WIDTHS}
+        sizes={HERO_SIZES}
+        priority
+        className={HERO_FRAME}
+        iconClassName="size-16"
+      />
+      {space.image ? (
+        <figcaption>
+          <PhotoCredit image={space.image} />
+        </figcaption>
+      ) : null}
+    </figure>
+  )
+}
+
 function StatusTile({ tone, children }: { tone: string; children: ReactNode }) {
   return <span className={cn('flex size-10 shrink-0 items-center justify-center rounded-md', tone)}>{children}</span>
 }
@@ -31,19 +66,9 @@ function StatusTile({ tone, children }: { tone: string; children: ReactNode }) {
 function HeaderMedia({ view }: { view: View }) {
   switch (view.kind) {
     case 'ready':
-      return (
-        <>
-          <SpaceTypeTile type={view.space.type} />
-          <SpaceTypeBadge type={view.space.type} />
-        </>
-      )
+      return <SpaceTypeBadge type={view.space.type} />
     case 'loading':
-      return (
-        <>
-          <Skeleton className="size-10 rounded-md" />
-          <Skeleton className="h-6 w-20 rounded-sm" />
-        </>
-      )
+      return <Skeleton className="h-6 w-20 rounded-sm" />
     case 'not-found':
       return (
         <StatusTile tone="bg-muted text-muted-foreground">
@@ -131,6 +156,7 @@ export function SpaceDetailPage() {
       */}
       <article aria-busy={view.kind === 'loading' ? true : undefined} className="space-y-8">
         <header className="space-y-4">
+          <Hero view={view} />
           <div className="flex items-center gap-3">
             <HeaderMedia view={view} />
           </div>
