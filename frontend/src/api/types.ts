@@ -17,8 +17,11 @@ export interface Space {
   name: string
   description: string
   type: SpaceTypeCode
-  /** `null` means the space has no Wi-Fi. */
-  wifiPassword: string | null
+  /**
+   * `null` means the space has no Wi-Fi. Optional because a later API change
+   * may omit it; treat `undefined` as "unknown", never as a password.
+   */
+  wifiPassword?: string | null
 }
 
 /** `SpaceRequestDTO` (POST and PUT; PUT is a full replace). */

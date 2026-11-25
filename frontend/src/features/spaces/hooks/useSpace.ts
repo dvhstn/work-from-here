@@ -1,10 +1,10 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { skipToken, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getSpace } from '@/api/spaces'
 import type { Paged, Space } from '@/api/types'
 import { spaceKeys } from '../queryKeys'
 
 /**
- * Loads one space. Pass `null` for an invalid id to skip the request.
+ * Loads one space. Pass `null` for an invalid id to skip the request (`skipToken`).
  * If the space is already in a cached list page, it renders immediately
  * while the detail request confirms it.
  */
@@ -12,9 +12,8 @@ export function useSpace(id: number | null) {
   const queryClient = useQueryClient()
 
   return useQuery<Space, Error, Space, ReturnType<typeof spaceKeys.detail>>({
-    queryKey: spaceKeys.detail(id ?? -1),
-    queryFn: ({ signal }) => getSpace(id as number, signal),
-    enabled: id !== null,
+    queryKey: spaceKeys.detail(id ?? 0),
+    queryFn: id === null ? skipToken : ({ signal }) => getSpace(id, signal),
     placeholderData: (): Space | undefined => {
       if (id === null) return undefined
       for (const [, page] of queryClient.getQueriesData<Paged<Space>>({ queryKey: spaceKeys.lists() })) {

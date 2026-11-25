@@ -34,7 +34,7 @@ export function SpaceCard({ space }: { space: Space }) {
       </div>
 
       <div>
-        <WifiBadge hasWifi={space.wifiPassword !== null} />
+        {space.wifiPassword === undefined ? null : <WifiBadge hasWifi={typeof space.wifiPassword === 'string'} />}
       </div>
     </article>
   )

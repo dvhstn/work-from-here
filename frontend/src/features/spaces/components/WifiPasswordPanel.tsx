@@ -2,7 +2,6 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { CheckIcon, CopyIcon, EyeIcon, EyeOffIcon, WifiIcon, WifiOffIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Toggle } from '@/components/ui/toggle'
 
 /** Fixed-length mask, so the hidden value doesn't reveal the password's length. */
 const MASK = '••••••••••'
@@ -47,11 +46,19 @@ function PasswordValue({ password }: { password: string }) {
       </dl>
 
       <div className="flex shrink-0 items-center gap-2">
-        {/* A stable name plus aria-pressed is the toggle-button pattern; the pressed style shows the state. */}
-        <Toggle variant="outline" pressed={revealed} onPressedChange={setRevealed} aria-label="Show password">
-          {revealed ? <EyeOffIcon aria-hidden="true" /> : <EyeIcon aria-hidden="true" />}
-          Show
-        </Toggle>
+        {/*
+          The label itself says what the button does next ("Show" / "Hide"), so
+          there's no aria-pressed: both together would describe the state twice.
+        */}
+        <Button variant="outline" size="sm" onClick={() => setRevealed((value) => !value)}>
+          {revealed ? (
+            <EyeOffIcon aria-hidden="true" data-icon="inline-start" />
+          ) : (
+            <EyeIcon aria-hidden="true" data-icon="inline-start" />
+          )}
+          {revealed ? 'Hide' : 'Show'}
+          <span className="sr-only"> password</span>
+        </Button>
         <Button variant="outline" size="sm" onClick={() => void copy()}>
           {copied ? (
             <CheckIcon aria-hidden="true" data-icon="inline-start" className="text-wifi" />
@@ -59,16 +66,21 @@ function PasswordValue({ password }: { password: string }) {
             <CopyIcon aria-hidden="true" data-icon="inline-start" />
           )}
           {copied ? 'Copied' : 'Copy'}
+          <span className="sr-only"> password</span>
         </Button>
       </div>
     </div>
   )
 }
 
-/** Wi-Fi section of the detail page. `null` means the space has no Wi-Fi listed. */
-export function WifiPasswordPanel({ password }: { password: string | null }) {
+/**
+ * Wi-Fi section of the detail page. A string is shown as a password, `null`
+ * means no Wi-Fi is listed, and `undefined` (field omitted by the API) means
+ * we don't know, so nothing is offered to reveal or copy.
+ */
+export function WifiPasswordPanel({ password }: { password: string | null | undefined }) {
   const headingId = useId()
-  const hasWifi = password !== null
+  const hasWifi = typeof password === 'string'
   const Icon = hasWifi ? WifiIcon : WifiOffIcon
 
   return (
@@ -90,7 +102,9 @@ export function WifiPasswordPanel({ password }: { password: string | null }) {
           {hasWifi ? (
             <PasswordValue password={password} />
           ) : (
-            <p className="text-sm text-muted-foreground">No Wi-Fi listed for this space.</p>
+            <p className="text-sm text-muted-foreground">
+              {password === null ? 'No Wi-Fi listed for this space.' : "Wi-Fi details aren't available."}
+            </p>
           )}
         </div>
       </div>
