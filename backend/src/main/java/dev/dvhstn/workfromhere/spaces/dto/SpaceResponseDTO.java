@@ -16,4 +16,5 @@ public class SpaceResponseDTO {
     private String description;
     private SpaceTypeResource type;
     private String wifiPassword;
+    private SpaceImageDTO image;
 }

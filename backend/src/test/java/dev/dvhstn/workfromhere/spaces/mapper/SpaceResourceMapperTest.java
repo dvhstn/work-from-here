@@ -1,13 +1,16 @@
 package dev.dvhstn.workfromhere.spaces.mapper;
 
+import dev.dvhstn.workfromhere.spaces.dto.SpaceImageDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceRequestDTO;
 import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
+import dev.dvhstn.workfromhere.spaces.model.SpaceImage;
 import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.model.SpaceTypeResource;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class SpaceResourceMapperTest {
 
@@ -79,6 +82,65 @@ public class SpaceResourceMapperTest {
                 ()-> assertEquals(expected.getType(), actual.getType()),
                 ()-> assertEquals(expected.getWifiPassword(), actual.getWifiPassword())
         );
+    }
+
+    @Test
+    void toSpaceResponseDTO_WhenSpaceHasImage_MapsImage() {
+        // Given
+        SpaceResource space = createMockSpaceResource(12L, "Linen Hall", "Library", SpaceTypeResource.LIBRARY, null);
+        space.setImage(SpaceImage.builder()
+                .key("spaces/12/linen-hall-library.jpg")
+                .alt("Reading room")
+                .credit("Jane Doe")
+                .license("CC BY-SA 4.0")
+                .sourceUrl("https://commons.wikimedia.org/wiki/File:Linen_Hall.jpg")
+                .build());
+
+        // When
+        SpaceImageDTO actual = mapper.toSpaceResponseDTO(space).getImage();
+
+        // Then
+        assertAll(
+                () -> assertEquals("spaces/12/linen-hall-library.jpg", actual.getKey()),
+                () -> assertEquals("Reading room", actual.getAlt()),
+                () -> assertEquals("Jane Doe", actual.getCredit()),
+                () -> assertEquals("CC BY-SA 4.0", actual.getLicense()),
+                () -> assertEquals("https://commons.wikimedia.org/wiki/File:Linen_Hall.jpg", actual.getSourceUrl())
+        );
+    }
+
+    @Test
+    void toSpaceResponseDTO_WhenSpaceHasNoImage_ImageIsNull() {
+        // Given
+        SpaceResource space = createMockSpaceResource(1L, "TestSpace", "Not a real place", SpaceTypeResource.CAFE, null);
+
+        // When
+        SpaceResponseDTO actual = mapper.toSpaceResponseDTO(space);
+
+        // Then
+        assertNull(actual.getImage());
+    }
+
+    @Test
+    void toSpaceResponseDTO_WhenImageHasNoKey_ImageIsNull() {
+        // Given
+        SpaceResource space = createMockSpaceResource(1L, "TestSpace", "Not a real place", SpaceTypeResource.CAFE, null);
+        space.setImage(SpaceImage.builder().alt("Orphaned alt text").credit("Jane Doe").build());
+
+        // When
+        SpaceResponseDTO actual = mapper.toSpaceResponseDTO(space);
+
+        // Then
+        assertNull(actual.getImage());
+    }
+
+    @Test
+    void toSpaceResource_NeverSetsImage() {
+        // When
+        SpaceResource actual = mapper.toSpaceResource(createMockSpaceRequestDTO("TestSpace", "Not a real place", 1, null));
+
+        // Then
+        assertNull(actual.getImage());
     }
 
     private SpaceResource createMockSpaceResource(

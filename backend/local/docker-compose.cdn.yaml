@@ -1,0 +1,52 @@
+# Local image CDN simulation (local development only; the credentials are local-only defaults).
+#   s3       = SeaweedFS, an S3-compatible origin bucket   http://localhost:9000  (bucket: wfh-images, public read)
+#   imgproxy = image CDN: resize, AVIF/WebP, caching       http://localhost:8090
+#
+# Start:  docker compose -f backend/local/docker-compose.cdn.yaml up -d
+# Stop:   docker compose -f backend/local/docker-compose.cdn.yaml down      (add -v to delete images)
+name: wfh-local-cdn
+
+services:
+  s3:
+    image: chrislusf/seaweedfs:latest
+    command: server -dir=/data -s3 -s3.port=8333 -s3.config=/etc/seaweedfs/s3.json -ip.bind=0.0.0.0
+    volumes:
+      - s3-data:/data
+      - ./s3-config.json:/etc/seaweedfs/s3.json:ro
+    ports:
+      - "127.0.0.1:9000:8333"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8333/status || exit 1"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  # One-shot job: create the bucket.
+  s3-init:
+    image: amazon/aws-cli:latest
+    depends_on:
+      s3:
+        condition: service_healthy
+    environment:
+      AWS_ACCESS_KEY_ID: wfh-local
+      AWS_SECRET_ACCESS_KEY: wfh-local-secret
+      AWS_DEFAULT_REGION: us-east-1
+    command: ["--endpoint-url", "http://s3:8333", "s3", "mb", "s3://wfh-images"]
+
+  imgproxy:
+    image: ghcr.io/imgproxy/imgproxy:latest
+    depends_on:
+      s3:
+        condition: service_healthy
+    environment:
+      IMGPROXY_BASE_URL: "http://s3:8333/wfh-images/"
+      IMGPROXY_ALLOWED_SOURCES: "http://s3:8333/"
+      IMGPROXY_AUTO_WEBP: "true"
+      IMGPROXY_AUTO_AVIF: "true"
+      IMGPROXY_TTL: "31536000"
+      IMGPROXY_MAX_SRC_RESOLUTION: "50"
+    ports:
+      - "127.0.0.1:8090:8080"
+
+volumes:
+  s3-data:
