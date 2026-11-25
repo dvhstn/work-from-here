@@ -99,6 +99,28 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void createSpace_WithEachNewSpaceType_PersistsTypeAndFiltersByIt() {
+        String[][] newTypes = {{"3", "BAR"}, {"4", "HOTEL"}, {"5", "LIBRARY"}, {"6", "COWORKING"}};
+
+        for (String[] newType : newTypes) {
+            ResponseEntity<SpaceResponseDTO> created = restTemplate.postForEntity(BASE_URL,
+                    buildRequest(newType[1] + " Space", "A " + newType[1].toLowerCase() + " space", Integer.valueOf(newType[0]), null),
+                    SpaceResponseDTO.class);
+
+            assertEquals(HttpStatus.CREATED, created.getStatusCode());
+            assertEquals(newType[1], created.getBody().getType().name());
+
+            ResponseEntity<RestPage<SpaceResponseDTO>> filtered = restTemplate.exchange(
+                    BASE_URL + "?type=" + newType[1].toLowerCase(), HttpMethod.GET, null, PAGE_TYPE
+            );
+
+            assertEquals(HttpStatus.OK, filtered.getStatusCode());
+            assertEquals(1, filtered.getBody().getTotalElements());
+            assertEquals(newType[1] + " Space", filtered.getBody().getContent().get(0).getName());
+        }
+    }
+
+    @Test
     void getAllSpaces_WithHasWifiFilter_ReturnsOnlyWifiSpaces() {
         restTemplate.postForEntity(BASE_URL, buildRequest("Wifi Cafe", "Has wifi", 1, "pass123"), SpaceResponseDTO.class);
         restTemplate.postForEntity(BASE_URL, buildRequest("No Wifi Cafe", "No wifi", 1, null), SpaceResponseDTO.class);
