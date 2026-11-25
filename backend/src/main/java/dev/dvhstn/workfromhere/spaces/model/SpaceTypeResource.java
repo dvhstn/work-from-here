@@ -6,7 +6,11 @@ import dev.dvhstn.workfromhere.spaces.exception.SpaceTypeNotFoundException;
 @Getter
 public enum SpaceTypeResource {
     CAFE(1, "Cafe"),
-    HOT_DESK(2, "Hot Desk");
+    HOT_DESK(2, "Hot Desk"),
+    BAR(3, "Bar"),
+    HOTEL(4, "Hotel"),
+    LIBRARY(5, "Library"),
+    COWORKING(6, "Coworking");
 
     private final Integer id;
     private final String name;
