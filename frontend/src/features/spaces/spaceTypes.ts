@@ -14,6 +14,17 @@ export const SPACE_TYPES: Record<SpaceTypeCode, SpaceTypeMeta> = {
 
 export const SPACE_TYPE_LIST: readonly SpaceTypeMeta[] = Object.values(SPACE_TYPES)
 
-export function isSpaceTypeCode(value: string): value is SpaceTypeCode {
-  return Object.hasOwn(SPACE_TYPES, value)
+export function isSpaceTypeCode(value: unknown): value is SpaceTypeCode {
+  return typeof value === 'string' && Object.hasOwn(SPACE_TYPES, value)
+}
+
+/**
+ * Display label for any `type` value the API returns. Unknown values (a new
+ * type, or a changed representation) degrade to a readable label instead of
+ * throwing during render.
+ */
+export function spaceTypeLabel(type: unknown): string {
+  if (isSpaceTypeCode(type)) return SPACE_TYPES[type].label
+  if (typeof type === 'string' && type.trim() !== '') return type
+  return 'Other'
 }

@@ -7,10 +7,12 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 30_000,
-      // Only retry failures that might be transient; 4xx won't fix themselves.
+      // Only retry failures that might be transient. 4xx responses and bugs
+      // (e.g. an unexpected payload shape) fail the same way every time.
       retry: (failureCount, error) =>
         failureCount < MAX_RETRIES &&
-        (!(error instanceof ApiError) || error.isUnreachable || error.status >= 500),
+        error instanceof ApiError &&
+        (error.isUnreachable || error.status >= 500),
     },
   },
 })

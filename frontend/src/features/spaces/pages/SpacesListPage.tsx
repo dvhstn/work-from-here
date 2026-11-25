@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { RotateCwIcon, TriangleAlertIcon } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { describeError } from '@/api/errors'
 import type { PageRequest, SpaceFilter, SpaceTypeCode } from '@/api/types'
 import { PageHeader } from '@/components/layout/PageHeader'
+import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ListPagination } from '../components/ListPagination'
 import { SpaceCard } from '../components/SpaceCard'
@@ -49,18 +52,26 @@ export function SpacesListPage() {
 
   const setType = (type: SpaceTypeCode | undefined) => update({ ...params, type, page: 1 })
   const setWifi = (hasWifi: boolean) => update({ ...params, hasWifi: hasWifi ? true : undefined, page: 1 })
-  const clearFilters = () => update({ page: 1 })
+  // Both "Clear filters" buttons disappear once used, so hand focus to a control that stays.
+  const allTypesRef = useRef<HTMLButtonElement>(null)
+  const clearFilters = () => {
+    update({ page: 1 })
+    allTypesRef.current?.focus()
+  }
 
   // A page past the end (e.g. a stale link) jumps to the last page that exists.
-  const totalPages = data?.totalPages ?? 0
+  const lastPage = data ? Math.max(1, data.totalPages) : 1
+  const outOfRange = data !== undefined && !isPlaceholderData && params.page > lastPage
   useEffect(() => {
-    if (!isPlaceholderData && totalPages > 0 && params.page > totalPages) {
-      update({ ...params, page: totalPages }, true)
-    }
-  }, [isPlaceholderData, totalPages, params, update])
+    if (outOfRange) update({ ...params, page: lastPage }, true)
+  }, [outOfRange, lastPage, params, update])
+
+  const showSkeleton = isPending || outOfRange
+  // A background refetch failed but earlier results are still on screen.
+  const isStale = isError && data !== undefined
 
   let status = ''
-  if (isPending) status = 'Loading spaces…'
+  if (showSkeleton) status = 'Loading spaces…'
   else if (data) status = data.totalElements === 0 && hasActiveFilters(params) ? 'No spaces match' : countLabel(data.totalElements)
 
   return (
@@ -75,10 +86,34 @@ export function SpacesListPage() {
         }
       />
 
-      <SpaceFilters params={params} onTypeChange={setType} onWifiChange={setWifi} onClear={clearFilters} />
+      <SpaceFilters
+        params={params}
+        onTypeChange={setType}
+        onWifiChange={setWifi}
+        onClear={clearFilters}
+        allTypesRef={allTypesRef}
+      />
+
+      {isStale ? (
+        <Alert>
+          <TriangleAlertIcon aria-hidden="true" />
+          <AlertTitle>Couldn't refresh</AlertTitle>
+          <AlertDescription>Showing earlier results. {describeError(error)}</AlertDescription>
+          <AlertAction>
+            <Button variant="outline" size="sm" onClick={() => void refetch()} disabled={isFetching} focusableWhenDisabled>
+              <RotateCwIcon
+                aria-hidden="true"
+                data-icon="inline-start"
+                className={isFetching ? 'motion-safe:animate-spin' : undefined}
+              />
+              Retry
+            </Button>
+          </AlertAction>
+        </Alert>
+      ) : null}
 
       <section aria-label="Results" className="space-y-8">
-        {isPending ? (
+        {showSkeleton ? (
           <ul className={gridClass} aria-busy="true" aria-label="Loading spaces">
             {Array.from({ length: SKELETON_COUNT }, (_, i) => (
               <li key={i}>

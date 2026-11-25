@@ -1,3 +1,4 @@
+import { useId, type Ref } from 'react'
 import { WifiIcon, XIcon } from 'lucide-react'
 import type { SpaceTypeCode } from '@/api/types'
 import { Button } from '@/components/ui/button'
@@ -14,21 +15,25 @@ interface SpaceFiltersProps {
   onTypeChange: (type: SpaceTypeCode | undefined) => void
   onWifiChange: (hasWifi: boolean) => void
   onClear: () => void
+  /** Receives the "All" type toggle, so callers can return focus to it after clearing. */
+  allTypesRef?: Ref<HTMLButtonElement>
 }
 
-export function SpaceFilters({ params, onTypeChange, onWifiChange, onClear }: SpaceFiltersProps) {
+export function SpaceFilters({ params, onTypeChange, onWifiChange, onClear, allTypesRef }: SpaceFiltersProps) {
+  const typeLabelId = useId()
+
   return (
     <div
-      role="toolbar"
+      role="group"
       aria-label="Filter spaces"
       className="-mx-4 flex items-center gap-x-4 gap-y-2 overflow-x-auto px-4 py-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
     >
       <div className="flex shrink-0 items-center gap-2">
-        <span id="type-filter-label" className="text-sm font-medium text-muted-foreground">
+        <span id={typeLabelId} className="text-sm font-medium text-muted-foreground">
           Type
         </span>
         <ToggleGroup
-          aria-labelledby="type-filter-label"
+          aria-labelledby={typeLabelId}
           variant="outline"
           spacing={0}
           value={[params.type ?? ALL]}
@@ -38,7 +43,9 @@ export function SpaceFilters({ params, onTypeChange, onWifiChange, onClear }: Sp
             onTypeChange(next && isSpaceTypeCode(next) ? next : undefined)
           }}
         >
-          <ToggleGroupItem value={ALL}>All</ToggleGroupItem>
+          <ToggleGroupItem ref={allTypesRef} value={ALL}>
+            All
+          </ToggleGroupItem>
           {SPACE_TYPE_LIST.map((type) => (
             <ToggleGroupItem key={type.code} value={type.code}>
               <SpaceTypeIcon type={type.code} />

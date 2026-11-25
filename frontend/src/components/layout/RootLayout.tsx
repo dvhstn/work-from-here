@@ -3,10 +3,13 @@ import { Link, Outlet, ScrollRestoration } from 'react-router-dom'
 import { ThemeToggle } from '@/components/theme/ThemeToggle'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
-import { useFocusOnNavigate } from './useFocusOnNavigate'
+import { useFocusOnNavigate } from '@/hooks/useFocusOnNavigate'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 export function RootLayout() {
   useFocusOnNavigate()
+  // Matches Tailwind's `sm` breakpoint.
+  const isWide = useMediaQuery('(min-width: 40rem)')
 
   return (
     <div className="flex min-h-svh flex-col">
@@ -21,7 +24,7 @@ export function RootLayout() {
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
           <Link
             to="/spaces"
-            className="-mx-2 flex items-center gap-2 rounded-md px-2 py-1 font-semibold tracking-tight outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="-mx-2 flex items-center gap-2 rounded-md px-2 py-1 font-semibold tracking-tight outline-none focus-visible:ring-[3px] focus-visible:ring-ring"
           >
             <CoffeeIcon className="size-5 text-primary" aria-hidden="true" />
             Work From Here
@@ -50,7 +53,7 @@ export function RootLayout() {
         <Outlet />
       </main>
 
-      <Toaster position="bottom-right" />
+      <Toaster position={isWide ? 'bottom-right' : 'bottom-center'} />
       <ScrollRestoration />
     </div>
   )

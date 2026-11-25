@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from 'react'
-import { THEME_STORAGE_KEY, ThemeContext, isTheme, type Theme } from './theme-context'
+import { THEME_STORAGE_KEY, ThemeContext, isTheme, type Theme } from './themeContext'
 
 const DARK_QUERY = '(prefers-color-scheme: dark)'
 

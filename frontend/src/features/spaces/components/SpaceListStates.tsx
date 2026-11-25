@@ -74,7 +74,7 @@ export function SpacesErrorState({ message, onRetry, retrying }: ErrorStateProps
         <EmptyDescription>{message}</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button variant="outline" onClick={onRetry} disabled={retrying}>
+        <Button variant="outline" onClick={onRetry} disabled={retrying} focusableWhenDisabled>
           <RotateCwIcon aria-hidden="true" data-icon="inline-start" className={retrying ? 'motion-safe:animate-spin' : undefined} />
           {retrying ? 'Retrying…' : 'Try again'}
         </Button>

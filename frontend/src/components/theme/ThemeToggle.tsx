@@ -7,7 +7,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { isTheme, useTheme } from './theme-context'
+import { isTheme, useTheme } from './themeContext'
 
 const OPTIONS = [
   { value: 'light', label: 'Light', Icon: SunIcon },
@@ -18,11 +18,12 @@ const OPTIONS = [
 export function ThemeToggle() {
   const { theme, resolvedTheme, setTheme } = useTheme()
   const CurrentIcon = resolvedTheme === 'dark' ? MoonIcon : SunIcon
+  const currentLabel = OPTIONS.find((option) => option.value === theme)?.label ?? 'System'
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={<Button variant="ghost" size="icon" aria-label={`Theme: ${theme}. Change theme`} />}
+        render={<Button variant="ghost" size="icon" aria-label={`Theme: ${currentLabel}. Change theme`} />}
       >
         <CurrentIcon aria-hidden="true" />
       </DropdownMenuTrigger>

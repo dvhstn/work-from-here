@@ -38,7 +38,11 @@ export interface SpaceFilter {
   hasWifi?: boolean
 }
 
-export type SpaceSortField = 'id' | 'name' | 'description' | 'type' | 'wifiPassword'
+/**
+ * Sortable fields exposed to the UI. The backend also accepts `description`
+ * and `wifiPassword`, but sorting by a secret isn't something we want to offer.
+ */
+export type SpaceSortField = 'id' | 'name' | 'type'
 export type SortDirection = 'asc' | 'desc'
 export type SortParam = `${SpaceSortField},${SortDirection}`
 

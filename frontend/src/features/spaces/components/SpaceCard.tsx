@@ -10,7 +10,7 @@ import { WifiBadge } from './WifiBadge'
  */
 export function SpaceCard({ space }: { space: Space }) {
   return (
-    <article className="group relative flex h-full flex-col gap-4 rounded-lg border bg-card p-5 text-card-foreground shadow-xs transition-colors duration-150 hover:border-foreground/20 has-focus-visible:border-ring has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50">
+    <article className="group relative flex h-full flex-col gap-4 rounded-lg border bg-card p-5 text-card-foreground shadow-xs transition-colors duration-150 hover:border-foreground/20 has-focus-visible:border-ring has-focus-visible:ring-[3px] has-focus-visible:ring-ring">
       <div className="flex items-center gap-3">
         <SpaceTypeTile type={space.type} />
         <SpaceTypeBadge type={space.type} />
