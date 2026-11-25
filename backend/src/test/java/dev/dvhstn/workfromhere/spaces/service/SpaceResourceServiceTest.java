@@ -6,6 +6,7 @@ import dev.dvhstn.workfromhere.spaces.dto.SpaceResponseDTO;
 import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceAlreadyExistsException;
 import dev.dvhstn.workfromhere.spaces.exception.SpaceResourceNotFoundException;
 import dev.dvhstn.workfromhere.spaces.mapper.SpaceResourceMapper;
+import dev.dvhstn.workfromhere.spaces.model.SpaceImage;
 import dev.dvhstn.workfromhere.spaces.model.SpaceResource;
 import dev.dvhstn.workfromhere.spaces.model.SpaceTypeResource;
 import dev.dvhstn.workfromhere.spaces.repository.SpaceResourceRepository;
@@ -201,6 +202,27 @@ class SpaceResourceServiceTest {
         assertEquals("Updated Name", existing.getName());
         assertEquals(SpaceTypeResource.HOT_DESK, existing.getType());
         assertNull(existing.getWifiPassword());
+        verify(spaceResourceRepository).saveAndFlush(existing);
+    }
+
+    @Test
+    void updateSpaceResource_WhenSpaceHasImage_KeepsImage() {
+        // Given
+        SpaceImage image = SpaceImage.builder().key("spaces/5/old-name.jpg").alt("Alt").credit("Jane Doe").build();
+        SpaceRequestDTO request = buildRequestDTO("Updated Name", "Updated description", 2, null);
+        SpaceResource existing = buildSpaceResource(5L, "Old Name", SpaceTypeResource.CAFE, null);
+        existing.setImage(image);
+        SpaceResource mapped = buildSpaceResource(null, "Updated Name", SpaceTypeResource.HOT_DESK, null);
+        when(spaceResourceRepository.findById(5L)).thenReturn(Optional.of(existing));
+        when(spaceResourceMapper.toSpaceResource(request)).thenReturn(mapped);
+        when(spaceResourceRepository.existsByNameIgnoreCaseAndIdNot("Updated Name", 5L)).thenReturn(false);
+
+        // When
+        spaceResourceService.updateSpaceResource(request, 5L);
+
+        // Then
+        assertEquals("Updated Name", existing.getName());
+        assertSame(image, existing.getImage());
         verify(spaceResourceRepository).saveAndFlush(existing);
     }
 

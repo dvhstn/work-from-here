@@ -10,6 +10,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,6 +49,39 @@ class SchemaValidationIntegrationTest extends BaseIntegrationTest {
         assertTrue(Arrays.stream(applied).allMatch(m -> m.getState().isApplied() && !m.getState().isFailed()));
         assertTrue(Arrays.stream(applied).anyMatch(m -> "2".equals(m.getVersion().getVersion())));
         assertEquals(0, flyway.info().pending().length);
+    }
+
+    @Test
+    void flyway_AppliesSpaceImagesMigration() {
+        assertTrue(Arrays.stream(flyway.info().applied()).anyMatch(m -> "4".equals(m.getVersion().getVersion())));
+    }
+
+    @Test
+    void spacesTable_HasNullableImageColumns() {
+        List<Map<String, Object>> columns = jdbcTemplate.queryForList(
+                "SELECT column_name, data_type, character_maximum_length, is_nullable FROM information_schema.columns "
+                        + "WHERE table_name = 'spaces' AND column_name LIKE 'image\\_%' ORDER BY column_name");
+
+        assertEquals(List.of(
+                imageColumn("image_alt", 255),
+                imageColumn("image_credit", 255),
+                imageColumn("image_key", 255),
+                imageColumn("image_license", 100),
+                imageColumn("image_source_url", 500)
+        ), columns);
+    }
+
+    @Test
+    void spacesTable_AcceptsSpaceWithoutImage() {
+        jdbcTemplate.update("INSERT INTO spaces (name, description, type) VALUES ('No Image', 'desc', 'CAFE')");
+
+        assertEquals(1, jdbcTemplate.queryForObject(
+                "SELECT count(*) FROM spaces WHERE name = 'No Image' AND image_key IS NULL", Integer.class));
+    }
+
+    private static Map<String, Object> imageColumn(String name, int length) {
+        return Map.of("column_name", name, "data_type", "character varying",
+                "character_maximum_length", length, "is_nullable", "YES");
     }
 
     @Test
