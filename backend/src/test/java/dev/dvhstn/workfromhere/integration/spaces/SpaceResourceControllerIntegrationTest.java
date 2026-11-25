@@ -16,7 +16,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +36,9 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private SpaceResourceRepository spaceResourceRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void cleanUp() {
@@ -96,6 +101,28 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().getTotalElements());
         assertEquals("Cafe One", response.getBody().getContent().get(0).getName());
+    }
+
+    @Test
+    void createSpace_WithEachNewSpaceType_PersistsTypeAndFiltersByIt() {
+        String[][] newTypes = {{"3", "BAR"}, {"4", "HOTEL"}, {"5", "LIBRARY"}, {"6", "COWORKING"}};
+
+        for (String[] newType : newTypes) {
+            ResponseEntity<SpaceResponseDTO> created = restTemplate.postForEntity(BASE_URL,
+                    buildRequest(newType[1] + " Space", "A " + newType[1].toLowerCase() + " space", Integer.valueOf(newType[0]), null),
+                    SpaceResponseDTO.class);
+
+            assertEquals(HttpStatus.CREATED, created.getStatusCode());
+            assertEquals(newType[1], created.getBody().getType().name());
+
+            ResponseEntity<RestPage<SpaceResponseDTO>> filtered = restTemplate.exchange(
+                    BASE_URL + "?type=" + newType[1].toLowerCase(), HttpMethod.GET, null, PAGE_TYPE
+            );
+
+            assertEquals(HttpStatus.OK, filtered.getStatusCode());
+            assertEquals(1, filtered.getBody().getTotalElements());
+            assertEquals(newType[1] + " Space", filtered.getBody().getContent().get(0).getName());
+        }
     }
 
     @Test
@@ -300,6 +327,94 @@ class SpaceResourceControllerIntegrationTest extends BaseIntegrationTest {
         );
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    // --- Images ---
+
+    private static final ParameterizedTypeReference<Map<String, Object>> JSON_TYPE =
+            new ParameterizedTypeReference<>() {};
+
+    @Test
+    void getSpaceById_WhenImageColumnsSet_ReturnsImage() {
+        Long id = createSpace("Linen Hall Library", "Quiet reading room", 5);
+        setImage(id, "spaces/" + id + "/linen-hall-library.jpg");
+
+        ResponseEntity<Map<String, Object>> response = getJson(BASE_URL + "/" + id);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedImage(id), response.getBody().get("image"));
+    }
+
+    @Test
+    void getSpaceById_WhenNoImage_ReturnsImageNull() {
+        Long id = createSpace("Plain Cafe", "No photo yet", 1);
+
+        ResponseEntity<Map<String, Object>> response = getJson(BASE_URL + "/" + id);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().containsKey("image"));
+        assertNull(response.getBody().get("image"));
+    }
+
+    @Test
+    void getAllSpaces_IncludesImageOrNullPerSpace() {
+        Long withImage = createSpace("Linen Hall Library", "Quiet reading room", 5);
+        Long withoutImage = createSpace("Plain Cafe", "No photo yet", 1);
+        setImage(withImage, "spaces/" + withImage + "/linen-hall-library.jpg");
+
+        ResponseEntity<Map<String, Object>> response = getJson(BASE_URL);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> content = (List<Map<String, Object>>) response.getBody().get("content");
+        Map<Long, Object> imagesById = new HashMap<>();
+        content.forEach(space -> imagesById.put(((Number) space.get("id")).longValue(), space.get("image")));
+        assertEquals(expectedImage(withImage), imagesById.get(withImage));
+        assertTrue(imagesById.containsKey(withoutImage));
+        assertNull(imagesById.get(withoutImage));
+    }
+
+    @Test
+    void updateSpace_WhenSpaceHasImage_KeepsImage() {
+        Long id = createSpace("Linen Hall Library", "Quiet reading room", 5);
+        setImage(id, "spaces/" + id + "/linen-hall-library.jpg");
+
+        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                BASE_URL + "/" + id, HttpMethod.PUT,
+                new HttpEntity<>(buildRequest("Linen Hall", "Renamed", 5, "books")), JSON_TYPE);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Linen Hall", response.getBody().get("name"));
+        assertEquals(expectedImage(id), response.getBody().get("image"));
+        assertEquals(expectedImage(id), getJson(BASE_URL + "/" + id).getBody().get("image"));
+        assertEquals("spaces/" + id + "/linen-hall-library.jpg",
+                jdbcTemplate.queryForObject("SELECT image_key FROM spaces WHERE id = ?", String.class, id));
+    }
+
+    private Long createSpace(String name, String description, int typeId) {
+        return restTemplate.postForEntity(BASE_URL, buildRequest(name, description, typeId, null), SpaceResponseDTO.class)
+                .getBody().getId();
+    }
+
+    private void setImage(Long id, String key) {
+        jdbcTemplate.update(
+                "UPDATE spaces SET image_key = ?, image_alt = ?, image_credit = ?, image_license = ?, image_source_url = ? "
+                        + "WHERE id = ?",
+                key, "Reading room with tall bookshelves", "Jane Doe", "CC BY-SA 4.0",
+                "https://commons.wikimedia.org/wiki/File:Linen_Hall.jpg", id);
+    }
+
+    private static Map<String, Object> expectedImage(Long id) {
+        return Map.of(
+                "key", "spaces/" + id + "/linen-hall-library.jpg",
+                "alt", "Reading room with tall bookshelves",
+                "credit", "Jane Doe",
+                "license", "CC BY-SA 4.0",
+                "sourceUrl", "https://commons.wikimedia.org/wiki/File:Linen_Hall.jpg");
+    }
+
+    private ResponseEntity<Map<String, Object>> getJson(String url) {
+        return restTemplate.exchange(url, HttpMethod.GET, null, JSON_TYPE);
     }
 
     // --- Client errors ---
