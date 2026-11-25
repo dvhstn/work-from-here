@@ -22,6 +22,24 @@ export interface Space {
    * may omit it; treat `undefined` as "unknown", never as a password.
    */
   wifiPassword?: string | null
+  /**
+   * The space's photo, or `null` when it has none. Optional so responses from
+   * a backend without images still type-check; treat `undefined` like `null`.
+   */
+  image?: SpaceImage | null
+}
+
+/**
+ * Photo metadata on `SpaceResponseDTO`. The API never sends a CDN host: build
+ * URLs from `key` with `cdnImageUrl` (`@/lib/cdn`).
+ */
+export interface SpaceImage {
+  /** Object key, e.g. `spaces/12/linen-hall-library.jpg`. */
+  key: string
+  alt: string | null
+  credit: string | null
+  license: string | null
+  sourceUrl: string | null
 }
 
 /** `SpaceRequestDTO` (POST and PUT; PUT is a full replace). */

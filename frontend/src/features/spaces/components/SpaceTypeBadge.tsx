@@ -1,38 +1,6 @@
-import {
-  Building2Icon,
-  CoffeeIcon,
-  HotelIcon,
-  LibraryBigIcon,
-  MapPinIcon,
-  MonitorIcon,
-  WineIcon,
-  type LucideIcon,
-} from 'lucide-react'
-import type { SpaceTypeCode } from '@/api/types'
 import { cn } from '@/lib/utils'
-import { isSpaceTypeCode, spaceTypeLabel } from '../spaceTypes'
-
-interface TypeStyle {
-  Icon: LucideIcon
-  tone: string
-}
-
-// Typed against every code, so adding a type without a style fails the build.
-const TYPE_STYLES: Record<SpaceTypeCode, TypeStyle> = {
-  CAFE: { Icon: CoffeeIcon, tone: 'bg-cafe-soft text-cafe' },
-  HOT_DESK: { Icon: MonitorIcon, tone: 'bg-desk-soft text-desk' },
-  BAR: { Icon: WineIcon, tone: 'bg-bar-soft text-bar' },
-  HOTEL: { Icon: HotelIcon, tone: 'bg-hotel-soft text-hotel' },
-  LIBRARY: { Icon: LibraryBigIcon, tone: 'bg-library-soft text-library' },
-  COWORKING: { Icon: Building2Icon, tone: 'bg-coworking-soft text-coworking' },
-}
-
-const FALLBACK_STYLE: TypeStyle = { Icon: MapPinIcon, tone: 'bg-muted text-muted-foreground' }
-
-/** Accepts `unknown` on purpose so an unexpected API value can't crash a render. */
-function styleFor(type: unknown): TypeStyle {
-  return isSpaceTypeCode(type) ? TYPE_STYLES[type] : FALLBACK_STYLE
-}
+import { styleFor } from '../spaceTypeStyle'
+import { spaceTypeLabel } from '../spaceTypes'
 
 export function SpaceTypeIcon({ type, className }: { type: unknown; className?: string }) {
   const { Icon } = styleFor(type)
