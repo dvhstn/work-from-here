@@ -6,10 +6,10 @@
  */
 
 /** Enum constant names of `SpaceTypeResource` as serialised in responses. */
-export type SpaceTypeCode = 'CAFE' | 'HOT_DESK'
+export type SpaceTypeCode = 'CAFE' | 'HOT_DESK' | 'BAR' | 'HOTEL' | 'LIBRARY' | 'COWORKING'
 
 /** Ids of `SpaceTypeResource`, used by request bodies (`typeId`). */
-export type SpaceTypeId = 1 | 2
+export type SpaceTypeId = 1 | 2 | 3 | 4 | 5 | 6
 
 /** `SpaceResponseDTO` */
 export interface Space {

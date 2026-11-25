@@ -10,6 +10,10 @@ export interface SpaceTypeMeta {
 export const SPACE_TYPES: Record<SpaceTypeCode, SpaceTypeMeta> = {
   CAFE: { code: 'CAFE', id: 1, label: 'Cafe' },
   HOT_DESK: { code: 'HOT_DESK', id: 2, label: 'Hot desk' },
+  BAR: { code: 'BAR', id: 3, label: 'Bar' },
+  HOTEL: { code: 'HOTEL', id: 4, label: 'Hotel' },
+  LIBRARY: { code: 'LIBRARY', id: 5, label: 'Library' },
+  COWORKING: { code: 'COWORKING', id: 6, label: 'Coworking' },
 }
 
 export const SPACE_TYPE_LIST: readonly SpaceTypeMeta[] = Object.values(SPACE_TYPES)

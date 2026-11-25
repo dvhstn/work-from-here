@@ -1,4 +1,14 @@
-import { CoffeeIcon, MapPinIcon, MonitorIcon, type LucideIcon } from 'lucide-react'
+import {
+  Building2Icon,
+  CoffeeIcon,
+  HotelIcon,
+  LibraryBigIcon,
+  MapPinIcon,
+  MonitorIcon,
+  WineIcon,
+  type LucideIcon,
+} from 'lucide-react'
+import type { SpaceTypeCode } from '@/api/types'
 import { cn } from '@/lib/utils'
 import { isSpaceTypeCode, spaceTypeLabel } from '../spaceTypes'
 
@@ -7,10 +17,15 @@ interface TypeStyle {
   tone: string
 }
 
-const TYPE_STYLES = {
+// Typed against every code, so adding a type without a style fails the build.
+const TYPE_STYLES: Record<SpaceTypeCode, TypeStyle> = {
   CAFE: { Icon: CoffeeIcon, tone: 'bg-cafe-soft text-cafe' },
   HOT_DESK: { Icon: MonitorIcon, tone: 'bg-desk-soft text-desk' },
-} satisfies Record<string, TypeStyle>
+  BAR: { Icon: WineIcon, tone: 'bg-bar-soft text-bar' },
+  HOTEL: { Icon: HotelIcon, tone: 'bg-hotel-soft text-hotel' },
+  LIBRARY: { Icon: LibraryBigIcon, tone: 'bg-library-soft text-library' },
+  COWORKING: { Icon: Building2Icon, tone: 'bg-coworking-soft text-coworking' },
+}
 
 const FALLBACK_STYLE: TypeStyle = { Icon: MapPinIcon, tone: 'bg-muted text-muted-foreground' }
 

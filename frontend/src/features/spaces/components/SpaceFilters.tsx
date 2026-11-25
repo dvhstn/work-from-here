@@ -26,16 +26,18 @@ export function SpaceFilters({ params, onTypeChange, onWifiChange, onClear, allT
     <div
       role="group"
       aria-label="Filter spaces"
-      className="-mx-4 flex items-center gap-x-4 gap-y-2 overflow-x-auto px-4 py-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
+      className="flex flex-wrap items-center gap-x-6 gap-y-3"
     >
-      <div className="flex shrink-0 items-center gap-2">
+      {/* Seven type options don't fit a phone, so chips wrap rather than scroll sideways. */}
+      <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
         <span id={typeLabelId} className="text-sm font-medium text-muted-foreground">
           Type
         </span>
         <ToggleGroup
           aria-labelledby={typeLabelId}
           variant="outline"
-          spacing={0}
+          spacing={2}
+          className="flex-wrap"
           value={[params.type ?? ALL]}
           onValueChange={(value: string[]) => {
             // Single-select: pressing the active item again yields [], which we treat as "All".
@@ -55,22 +57,24 @@ export function SpaceFilters({ params, onTypeChange, onWifiChange, onClear, allT
         </ToggleGroup>
       </div>
 
-      <Toggle
-        variant="outline"
-        className="shrink-0"
-        pressed={params.hasWifi === true}
-        onPressedChange={onWifiChange}
-      >
-        <WifiIcon aria-hidden="true" />
-        Has Wi-Fi
-      </Toggle>
+      <div className="flex flex-wrap items-center gap-2">
+        <Toggle
+          variant="outline"
+          className="shrink-0"
+          pressed={params.hasWifi === true}
+          onPressedChange={onWifiChange}
+        >
+          <WifiIcon aria-hidden="true" />
+          Has Wi-Fi
+        </Toggle>
 
-      {hasActiveFilters(params) ? (
-        <Button variant="ghost" size="sm" className="shrink-0" onClick={onClear}>
-          <XIcon aria-hidden="true" data-icon="inline-start" />
-          Clear filters
-        </Button>
-      ) : null}
+        {hasActiveFilters(params) ? (
+          <Button variant="ghost" size="sm" className="shrink-0" onClick={onClear}>
+            <XIcon aria-hidden="true" data-icon="inline-start" />
+            Clear filters
+          </Button>
+        ) : null}
+      </div>
     </div>
   )
 }

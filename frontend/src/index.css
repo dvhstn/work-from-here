@@ -38,6 +38,14 @@
   --cafe-soft: oklch(0.95 0.04 75);
   --desk: oklch(0.5 0.14 275);
   --desk-soft: oklch(0.95 0.03 275);
+  --bar: oklch(0.5 0.14 5); /* wine */
+  --bar-soft: oklch(0.95 0.025 5);
+  --hotel: oklch(0.5 0.11 240); /* blue */
+  --hotel-soft: oklch(0.95 0.025 240);
+  --library: oklch(0.48 0.1 120); /* olive */
+  --library-soft: oklch(0.95 0.04 115);
+  --coworking: oklch(0.5 0.15 320); /* plum */
+  --coworking-soft: oklch(0.95 0.03 320);
   --wifi: oklch(0.5 0.11 155);
   --wifi-soft: oklch(0.95 0.04 155);
 }
@@ -70,6 +78,14 @@
   --cafe-soft: oklch(0.3 0.05 60);
   --desk: oklch(0.8 0.1 275);
   --desk-soft: oklch(0.3 0.06 275);
+  --bar: oklch(0.82 0.08 5);
+  --bar-soft: oklch(0.3 0.055 5);
+  --hotel: oklch(0.82 0.08 240);
+  --hotel-soft: oklch(0.3 0.05 240);
+  --library: oklch(0.84 0.11 115);
+  --library-soft: oklch(0.3 0.04 120);
+  --coworking: oklch(0.82 0.1 320);
+  --coworking-soft: oklch(0.3 0.06 320);
   --wifi: oklch(0.8 0.12 155);
   --wifi-soft: oklch(0.29 0.05 155);
 }
@@ -107,6 +123,14 @@
   --color-cafe-soft: var(--cafe-soft);
   --color-desk: var(--desk);
   --color-desk-soft: var(--desk-soft);
+  --color-bar: var(--bar);
+  --color-bar-soft: var(--bar-soft);
+  --color-hotel: var(--hotel);
+  --color-hotel-soft: var(--hotel-soft);
+  --color-library: var(--library);
+  --color-library-soft: var(--library-soft);
+  --color-coworking: var(--coworking);
+  --color-coworking-soft: var(--coworking-soft);
   --color-wifi: var(--wifi);
   --color-wifi-soft: var(--wifi-soft);
 }
