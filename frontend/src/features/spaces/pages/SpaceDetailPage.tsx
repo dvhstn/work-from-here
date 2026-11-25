@@ -27,7 +27,7 @@ const headingText: Record<Exclude<View['kind'], 'ready' | 'loading'>, string> = 
 }
 
 /** The hero spans the `max-w-3xl` column: 4:3 on mobile, 21:9 from `md`. */
-const HERO_SIZES = '(min-width: 51rem) 768px, calc(100vw - 2rem)'
+const HERO_SIZES = '(min-width: 51rem) 768px, (min-width: 40rem) calc(100vw - 3rem), calc(100vw - 2rem)'
 const HERO_WIDTHS = [400, 800, 1200, 1600] as const
 const HERO_FRAME = 'rounded-lg border'
 
@@ -38,24 +38,20 @@ function Hero({ view }: { view: View }) {
   if (view.kind !== 'ready') return null
   const { space } = view
   return (
-    <figure className="space-y-2">
-      <SpaceImage
-        image={space.image}
-        type={space.type}
-        ratio={4 / 3}
-        wideRatio={21 / 9}
-        widths={HERO_WIDTHS}
-        sizes={HERO_SIZES}
-        priority
-        className={HERO_FRAME}
-        iconClassName="size-16"
-      />
-      {space.image ? (
-        <figcaption>
-          <PhotoCredit image={space.image} />
-        </figcaption>
-      ) : null}
-    </figure>
+    <SpaceImage
+      image={space.image}
+      type={space.type}
+      ratio={4 / 3}
+      wideRatio={21 / 9}
+      widths={HERO_WIDTHS}
+      sizes={HERO_SIZES}
+      loading="eager"
+      fetchPriority="high"
+      className={HERO_FRAME}
+      iconClassName="size-16"
+      caption={space.image ? <PhotoCredit image={space.image} /> : undefined}
+      figureClassName="space-y-2"
+    />
   )
 }
 

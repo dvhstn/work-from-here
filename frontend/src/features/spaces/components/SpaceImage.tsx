@@ -1,4 +1,4 @@
-import { useCallback, useState, type CSSProperties } from 'react'
+import { useCallback, useState, type CSSProperties, type ReactNode } from 'react'
 import type { SpaceImage as SpaceImageData } from '@/api/types'
 import { cdnImageUrl } from '@/lib/cdn'
 import { cn } from '@/lib/utils'
@@ -21,8 +21,23 @@ interface SpaceImageProps {
   widths: readonly number[]
   /** The `sizes` attribute: how wide the image renders at each viewport. */
   sizes: string
-  /** Above-the-fold hero: load eagerly at high priority instead of lazily. */
-  priority?: boolean
+  /** `eager` for images likely to be above the fold. Defaults to `lazy`. */
+  loading?: 'lazy' | 'eager'
+  /** `high` only for the page's most important image (the LCP candidate). */
+  fetchPriority?: 'high' | 'low' | 'auto'
+  /**
+   * The surrounding UI already names the space (e.g. a card title), so the
+   * photo gets `alt=""` and the fallback stays hidden from assistive tech.
+   */
+  decorative?: boolean
+  /**
+   * Rendered in a `<figcaption>` (and the image wrapped in a `<figure>`) while
+   * a photo is loading or shown, but not when there's none or it failed, so a
+   * credit never sits under the fallback tile.
+   */
+  caption?: ReactNode
+  /** Classes for the `<figure>` when `caption` is given. */
+  figureClassName?: string
   className?: string
   /** Size of the type icon in the fallback tile. */
   iconClassName?: string
@@ -45,7 +60,11 @@ export function SpaceImage({
   wideRatio,
   widths,
   sizes,
-  priority = false,
+  loading = 'lazy',
+  fetchPriority,
+  decorative = false,
+  caption,
+  figureClassName,
   className,
   iconClassName = 'size-10',
 }: SpaceImageProps) {
@@ -73,11 +92,11 @@ export function SpaceImage({
   )
 
   const frameStyle = { '--ar': ratio, '--ar-wide': wideRatio ?? ratio } as CSSProperties
-  const alt = image?.alt?.trim() ?? ''
+  const alt = decorative ? '' : (image?.alt?.trim() ?? '')
   const showPhoto = key !== null && status !== 'error'
   const baseWidth = widths[Math.floor((widths.length - 1) / 2)] ?? 800
 
-  return (
+  const frame = (
     <div
       style={frameStyle}
       className={cn('relative aspect-(--ar) overflow-hidden md:aspect-(--ar-wide)', style.soft, className)}
@@ -95,9 +114,9 @@ export function SpaceImage({
             width={baseWidth}
             height={Math.round(baseWidth / ratio)}
             alt={alt}
-            loading={priority ? 'eager' : 'lazy'}
+            loading={loading}
             decoding="async"
-            fetchPriority={priority ? 'high' : undefined}
+            fetchPriority={fetchPriority}
             onLoad={() => settle('loaded')}
             onError={() => settle('error')}
             data-loaded={status === 'loaded' ? '' : undefined}
@@ -114,5 +133,13 @@ export function SpaceImage({
         </div>
       )}
     </div>
+  )
+
+  if (caption === undefined || caption === null) return frame
+  return (
+    <figure className={figureClassName}>
+      {frame}
+      {showPhoto ? <figcaption>{caption}</figcaption> : null}
+    </figure>
   )
 }

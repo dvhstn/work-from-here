@@ -139,9 +139,9 @@ export function SpacesListPage() {
               className={cn(gridClass, 'transition-opacity duration-150', isPlaceholderData && 'opacity-60')}
               aria-busy={isPlaceholderData}
             >
-              {data.items.map((space) => (
+              {data.items.map((space, index) => (
                 <li key={space.id}>
-                  <SpaceCard space={space} />
+                  <SpaceCard space={space} index={index} />
                 </li>
               ))}
             </ul>

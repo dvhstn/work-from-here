@@ -15,7 +15,18 @@ const CARD_IMAGE_WIDTHS = [400, 800, 1200] as const
  * there's one tab stop and no nested interactive content. The Wi-Fi
  * password is deliberately never shown here.
  */
-export function SpaceCard({ space }: { space: Space }) {
+interface SpaceCardProps {
+  space: Space
+  /**
+   * Position in the grid. The first row (up to three columns) is likely above
+   * the fold, so its photos load eagerly and the first one at high priority.
+   */
+  index?: number
+}
+
+export function SpaceCard({ space, index }: SpaceCardProps) {
+  const aboveFold = index !== undefined && index < 3
+
   // Remember the list's filters and page so the detail page can link back to them.
   const { search } = useLocation()
 
@@ -27,6 +38,10 @@ export function SpaceCard({ space }: { space: Space }) {
         ratio={16 / 10}
         widths={CARD_IMAGE_WIDTHS}
         sizes={CARD_IMAGE_SIZES}
+        loading={aboveFold ? 'eager' : 'lazy'}
+        fetchPriority={index === 0 ? 'high' : undefined}
+        // The card title already names the space; the long alt would be read before it.
+        decorative
         className="border-b"
       />
 
