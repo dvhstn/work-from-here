@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui/button-link'
 
 interface ListPaginationProps {
   /** 1-based. */
@@ -23,22 +22,17 @@ interface PageLinkProps {
  */
 function PageLink({ to, disabled, children }: PageLinkProps) {
   return (
-    <Button
+    <ButtonLink
       variant="outline"
-      nativeButton={false}
       className="aria-disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:bg-background"
-      render={
-        <Link
-          to={to}
-          aria-disabled={disabled || undefined}
-          onClick={(event) => {
-            if (disabled) event.preventDefault()
-          }}
-        />
-      }
+      to={to}
+      aria-disabled={disabled || undefined}
+      onClick={(event) => {
+        if (disabled) event.preventDefault()
+      }}
     >
       {children}
-    </Button>
+    </ButtonLink>
   )
 }
 

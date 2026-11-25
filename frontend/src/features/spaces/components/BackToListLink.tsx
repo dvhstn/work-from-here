@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { ButtonLink } from '@/components/ui/button-link'
 import { cameFromList, listHrefFromState } from '../navigation'
 
 interface BackToListLinkProps {
@@ -22,26 +22,21 @@ export function BackToListLink({ children, variant = 'default', size = 'default'
   const fromList = cameFromList(location.state)
 
   return (
-    <Button
+    <ButtonLink
       variant={variant}
       size={size}
       className={className}
-      nativeButton={false}
-      render={
-        <Link
-          to={listHrefFromState(location.state)}
-          onClick={(event) => {
-            const plainClick =
-              event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey
-            if (fromList && plainClick) {
-              event.preventDefault()
-              navigate(-1)
-            }
-          }}
-        />
-      }
+      to={listHrefFromState(location.state)}
+      onClick={(event) => {
+        const plainClick =
+          event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey
+        if (fromList && plainClick) {
+          event.preventDefault()
+          navigate(-1)
+        }
+      }}
     >
       {children}
-    </Button>
+    </ButtonLink>
   )
 }

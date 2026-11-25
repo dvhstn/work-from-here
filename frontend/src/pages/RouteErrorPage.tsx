@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { RotateCwIcon, TriangleAlertIcon } from 'lucide-react'
-import { Link, isRouteErrorResponse, useRouteError } from 'react-router-dom'
+import { isRouteErrorResponse, useRouteError } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui/button-link'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia } from '@/components/ui/empty'
 
 /** Shown when a route throws while rendering, so the app shell stays usable. */
@@ -36,9 +37,7 @@ export function RouteErrorPage() {
             Reload
           </Button>
         )}
-        <Button render={<Link to="/spaces" />} nativeButton={false}>
-          Back to spaces
-        </Button>
+        <ButtonLink to="/spaces">Back to spaces</ButtonLink>
       </EmptyContent>
     </Empty>
   )

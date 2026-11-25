@@ -1,7 +1,7 @@
 import { CoffeeIcon, PlusIcon } from 'lucide-react'
 import { Link, Outlet, ScrollRestoration } from 'react-router-dom'
 import { ThemeToggle } from '@/components/theme/ThemeToggle'
-import { Button } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui/button-link'
 import { Toaster } from '@/components/ui/sonner'
 import { useFocusOnNavigate } from '@/hooks/useFocusOnNavigate'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
@@ -31,19 +31,13 @@ export function RootLayout() {
           </Link>
 
           <nav aria-label="Primary" className="flex items-center gap-1 sm:gap-2">
-            <Button render={<Link to="/spaces/new" />} nativeButton={false} className="hidden sm:inline-flex">
+            <ButtonLink to="/spaces/new" className="hidden sm:inline-flex">
               <PlusIcon aria-hidden="true" data-icon="inline-start" />
               Add space
-            </Button>
-            <Button
-              render={<Link to="/spaces/new" />}
-              nativeButton={false}
-              size="icon"
-              className="sm:hidden"
-              aria-label="Add space"
-            >
+            </ButtonLink>
+            <ButtonLink to="/spaces/new" size="icon" className="sm:hidden" aria-label="Add space">
               <PlusIcon aria-hidden="true" />
-            </Button>
+            </ButtonLink>
             <ThemeToggle />
           </nav>
         </div>

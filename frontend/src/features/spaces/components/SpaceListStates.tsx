@@ -1,6 +1,6 @@
 import { MapPinnedIcon, PlusIcon, RotateCwIcon, SearchXIcon, TriangleAlertIcon } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui/button-link'
 import {
   Empty,
   EmptyContent,
@@ -25,10 +25,10 @@ export function NoSpacesState() {
         <EmptyDescription>Add the first cafe or hot desk you like working from.</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button render={<Link to="/spaces/new" />} nativeButton={false}>
+        <ButtonLink to="/spaces/new">
           <PlusIcon aria-hidden="true" data-icon="inline-start" />
           Add space
-        </Button>
+        </ButtonLink>
       </EmptyContent>
     </Empty>
   )

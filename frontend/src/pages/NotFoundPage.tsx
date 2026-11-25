@@ -1,6 +1,5 @@
 import { CompassIcon } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui/button-link'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia } from '@/components/ui/empty'
 
 export function NotFoundPage() {
@@ -16,9 +15,7 @@ export function NotFoundPage() {
         <EmptyDescription>The page you're looking for doesn't exist or has moved.</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button render={<Link to="/spaces" />} nativeButton={false}>
-          Back to spaces
-        </Button>
+        <ButtonLink to="/spaces">Back to spaces</ButtonLink>
       </EmptyContent>
     </Empty>
   )
