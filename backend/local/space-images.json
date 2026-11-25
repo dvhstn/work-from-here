@@ -1,0 +1,482 @@
+[
+  {
+    "spaceId": 1,
+    "key": "spaces/1/established-coffee.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/%22Established%22_coffee_shop%2C_Belfast_%28November_2018%29_-_geograph.org.uk_-_5972003.jpg",
+    "alt": "Exterior of the Established coffee shop on a Belfast street corner, November 2018",
+    "credit": "Albert Bridge",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:%22Established%22_coffee_shop,_Belfast_(November_2018)_-_geograph.org.uk_-_5972003.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 2,
+    "key": "spaces/2/general-merchants-ormeau-road.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5b/The_Courtyard_Coffee_Shop_interior%2C_Ballycastle_-_geograph.org.uk_-_8123928.jpg",
+    "alt": "Interior of a small coffee shop with tables and chairs (The Courtyard Coffee Shop, Ballycastle; not this cafe)",
+    "credit": "Kenneth  Allen",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Courtyard_Coffee_Shop_interior,_Ballycastle_-_geograph.org.uk_-_8123928.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 3,
+    "key": "spaces/3/kaffe-o-botanic-avenue.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Interior_Johnie%27s_Coffee_Shop_2021.jpg/1920px-Interior_Johnie%27s_Coffee_Shop_2021.jpg",
+    "alt": "Interior of a retro diner-style coffee shop with counter and booths (Johnie's Coffee Shop, Los Angeles; not this cafe)",
+    "credit": "Downtowngal",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Interior_Johnie%27s_Coffee_Shop_2021.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 4,
+    "key": "spaces/4/neighbourhood-cafe.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Newark-on-Trent%2C_Interior_of_%27Cherizena_Coffee_Shop%27%2C_23-24_Stodman_Street_-_geograph.org.uk_-_7846323.jpg/1920px-Newark-on-Trent%2C_Interior_of_%27Cherizena_Coffee_Shop%27%2C_23-24_Stodman_Street_-_geograph.org.uk_-_7846323.jpg",
+    "alt": "Interior of a coffee shop with seating and tables (Cherizena Coffee Shop, Newark-on-Trent; not this cafe)",
+    "credit": "Michael Garlick",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Newark-on-Trent,_Interior_of_%27Cherizena_Coffee_Shop%27,_23-24_Stodman_Street_-_geograph.org.uk_-_7846323.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 5,
+    "key": "spaces/5/hubflow-dublin-road.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/C4DI_interior_coworking_space_2025.jpg/1920px-C4DI_interior_coworking_space_2025.jpg",
+    "alt": "Refurbished open-plan coworking area with desks and lounge seating (C4DI, Hull; not this space)",
+    "credit": "Influence Media",
+    "license": "CC BY 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:C4DI_interior_coworking_space_2025.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 6,
+    "key": "spaces/6/regus-belfast-the-linenhall.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Desk-office-workspace-coworking_%2823699033283%29.jpg/1920px-Desk-office-workspace-coworking_%2823699033283%29.jpg",
+    "alt": "Shared office desk with laptops and notebooks in a coworking-style workspace (generic stock photo, not this space)",
+    "credit": "www.Pixel.la Free Stock Photos",
+    "license": "CC0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Desk-office-workspace-coworking_(23699033283).jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 7,
+    "key": "spaces/7/spaces-the-vantage.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Openspace_wao_coworking.jpg/1920px-Openspace_wao_coworking.jpg",
+    "alt": "Open-plan coworking room with rows of desks and chairs (WAO Coworking, Brussels; not this space)",
+    "credit": "WAO Coworking",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Openspace_wao_coworking.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 8,
+    "key": "spaces/8/glandore-arthur-house.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Winplace-coworking-space.jpg/1920px-Winplace-coworking-space.jpg",
+    "alt": "Coworking space with shared work tables and seating (a space in Vietnam; not this space)",
+    "credit": "Nguyendinhtruong2020",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Winplace-coworking-space.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 9,
+    "key": "spaces/9/the-crown-bar.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Belfast_City_Centre_-_The_Crown_Liquor_Saloon_-_The_Bar_-_geograph.org.uk_-_3703540.jpg/1920px-Belfast_City_Centre_-_The_Crown_Liquor_Saloon_-_The_Bar_-_geograph.org.uk_-_3703540.jpg",
+    "alt": "The ornate Victorian bar inside the Crown Liquor Saloon, Belfast, with carved woodwork and decorative tiles",
+    "credit": "Joseph Mischyshyn",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Belfast_City_Centre_-_The_Crown_Liquor_Saloon_-_The_Bar_-_geograph.org.uk_-_3703540.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 10,
+    "key": "spaces/10/kelly-s-cellars.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Kellys_Cellars%2C_Belfast%2C_February_2011_%2801%29.JPG/1920px-Kellys_Cellars%2C_Belfast%2C_February_2011_%2801%29.JPG",
+    "alt": "Exterior of Kelly's Cellars pub on Bank Street, Belfast, February 2011",
+    "credit": "Ardfern",
+    "license": "CC BY-SA 3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kellys_Cellars,_Belfast,_February_2011_(01).JPG",
+    "kind": "place"
+  },
+  {
+    "spaceId": 11,
+    "key": "spaces/11/the-dirty-onion.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/The_Dirty_Onion_pub%2C_Hill_Street%2C_Belfast_-_geograph.org.uk_-_5329047.jpg/1920px-The_Dirty_Onion_pub%2C_Hill_Street%2C_Belfast_-_geograph.org.uk_-_5329047.jpg",
+    "alt": "Exterior of The Dirty Onion pub on Hill Street, Belfast",
+    "credit": "Peter Evans",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Dirty_Onion_pub,_Hill_Street,_Belfast_-_geograph.org.uk_-_5329047.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 12,
+    "key": "spaces/12/sunflower-public-house.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/0/06/Sunflower_Bar%2C_Belfast_-_geograph.org.uk_-_6153769.jpg",
+    "alt": "Exterior of the Sunflower bar on a street corner in Belfast",
+    "credit": "Kenneth  Allen",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sunflower_Bar,_Belfast_-_geograph.org.uk_-_6153769.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 13,
+    "key": "spaces/13/grand-central-hotel-belfast.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/d/da/The_Grand_Central_Hotel%2C_Belfast_-_June_2018%281%29_-_geograph.org.uk_-_5817160.jpg",
+    "alt": "The Grand Central Hotel tower in Belfast city centre, June 2018",
+    "credit": "Albert Bridge",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Grand_Central_Hotel,_Belfast_-_June_2018(1)_-_geograph.org.uk_-_5817160.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 14,
+    "key": "spaces/14/the-merchant-hotel.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Merchant_Hotel%2C_Belfast%2C_July_2010_%2801%29.JPG/1920px-Merchant_Hotel%2C_Belfast%2C_July_2010_%2801%29.JPG",
+    "alt": "Ornate stone facade of the Merchant Hotel, a former bank building, in Belfast, July 2010",
+    "credit": "Ardfern",
+    "license": "CC BY-SA 3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Merchant_Hotel,_Belfast,_July_2010_(01).JPG",
+    "kind": "place"
+  },
+  {
+    "spaceId": 15,
+    "key": "spaces/15/bullitt-hotel.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/8/87/%22The_Bullitt%22_hotel%2C_Belfast_%28November_2016%29_-_geograph.org.uk_-_5195039.jpg",
+    "alt": "Exterior of the Bullitt hotel in Belfast, November 2016",
+    "credit": "Albert Bridge",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:%22The_Bullitt%22_hotel,_Belfast_(November_2016)_-_geograph.org.uk_-_5195039.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 16,
+    "key": "spaces/16/fitzwilliam-hotel-belfast.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ae/The_Fitzwilliam_Hotel%2C_Belfast_-_geograph.org.uk_-_2832675.jpg",
+    "alt": "Exterior of the Fitzwilliam Hotel in Belfast",
+    "credit": "Albert Bridge",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Fitzwilliam_Hotel,_Belfast_-_geograph.org.uk_-_2832675.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 17,
+    "key": "spaces/17/belfast-central-library.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Belfast_Central_Library.jpg/1920px-Belfast_Central_Library.jpg",
+    "alt": "Sandstone facade of Belfast Central Library on Royal Avenue",
+    "credit": "Erl Johnston",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Belfast_Central_Library.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 18,
+    "key": "spaces/18/linen-hall-library.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Linen_Hall_Library%2C_Belfast%2C_March_2011_%2811%29.JPG/1920px-Linen_Hall_Library%2C_Belfast%2C_March_2011_%2811%29.JPG",
+    "alt": "The Linen Hall Library building on Donegall Square North, Belfast, March 2011",
+    "credit": "Ardfern",
+    "license": "CC BY-SA 3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Linen_Hall_Library,_Belfast,_March_2011_(11).JPG",
+    "kind": "place"
+  },
+  {
+    "spaceId": 19,
+    "key": "spaces/19/ormeau-road-library.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Ormeau_Road_Library.jpg/1920px-Ormeau_Road_Library.jpg",
+    "alt": "Red-brick exterior of Ormeau Road Library, Belfast",
+    "credit": "Simon Cobb",
+    "license": "CC0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ormeau_Road_Library.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 20,
+    "key": "spaces/20/lisburn-road-library.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Lisburn_Road_Library%2C_Belfast_%28May_2014%29_-_geograph.org.uk_-_3962928.jpg",
+    "alt": "Exterior of Lisburn Road Library, Belfast, May 2014",
+    "credit": "Albert Bridge",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lisburn_Road_Library,_Belfast_(May_2014)_-_geograph.org.uk_-_3962928.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 21,
+    "key": "spaces/21/ormeau-baths.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Former_Ormeau_Baths%2C_Belfast_-_geograph.org.uk_-_438802.jpg",
+    "alt": "Brick facade of the former Ormeau Baths on Ormeau Avenue, Belfast, photographed in 2007 before its conversion to workspace",
+    "credit": "Albert Bridge",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Former_Ormeau_Baths,_Belfast_-_geograph.org.uk_-_438802.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 22,
+    "key": "spaces/22/urban-hq.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/3/37/Eagle_Star_House%2C_Belfast_%28June_2019%29_-_geograph.org.uk_-_6178117.jpg",
+    "alt": "Eagle Star House office building on Upper Queen Street, Belfast, June 2019",
+    "credit": "Albert Bridge",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Eagle_Star_House,_Belfast_(June_2019)_-_geograph.org.uk_-_6178117.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 23,
+    "key": "spaces/23/catalyst-titanic-quarter.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Desk-office-workspace-coworking_%2823699033283%29.jpg/1920px-Desk-office-workspace-coworking_%2823699033283%29.jpg",
+    "alt": "Shared office desk with laptops and notebooks in a coworking-style workspace (generic stock photo, not this space)",
+    "credit": "www.Pixel.la Free Stock Photos",
+    "license": "CC0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Desk-office-workspace-coworking_(23699033283).jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 24,
+    "key": "spaces/24/glandore-arthur-place.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/C4DI_interior_coworking_space_2025.jpg/1920px-C4DI_interior_coworking_space_2025.jpg",
+    "alt": "Refurbished open-plan coworking area with desks and lounge seating (C4DI, Hull; not this space)",
+    "credit": "Influence Media",
+    "license": "CC BY 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:C4DI_interior_coworking_space_2025.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 25,
+    "key": "spaces/25/vice-coffee-inc.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5b/The_Courtyard_Coffee_Shop_interior%2C_Ballycastle_-_geograph.org.uk_-_8123928.jpg",
+    "alt": "Interior of a small coffee shop with tables and chairs (The Courtyard Coffee Shop, Ballycastle; not this cafe)",
+    "credit": "Kenneth  Allen",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Courtyard_Coffee_Shop_interior,_Ballycastle_-_geograph.org.uk_-_8123928.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 26,
+    "key": "spaces/26/clement-pekoe.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Interior_Johnie%27s_Coffee_Shop_2021.jpg/1920px-Interior_Johnie%27s_Coffee_Shop_2021.jpg",
+    "alt": "Interior of a retro diner-style coffee shop with counter and booths (Johnie's Coffee Shop, Los Angeles; not this cafe)",
+    "credit": "Downtowngal",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Interior_Johnie%27s_Coffee_Shop_2021.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 27,
+    "key": "spaces/27/kaph.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Newark-on-Trent%2C_Interior_of_%27Cherizena_Coffee_Shop%27%2C_23-24_Stodman_Street_-_geograph.org.uk_-_7846323.jpg/1920px-Newark-on-Trent%2C_Interior_of_%27Cherizena_Coffee_Shop%27%2C_23-24_Stodman_Street_-_geograph.org.uk_-_7846323.jpg",
+    "alt": "Interior of a coffee shop with seating and tables (Cherizena Coffee Shop, Newark-on-Trent; not this cafe)",
+    "credit": "Michael Garlick",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Newark-on-Trent,_Interior_of_%27Cherizena_Coffee_Shop%27,_23-24_Stodman_Street_-_geograph.org.uk_-_7846323.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 28,
+    "key": "spaces/28/two-pups-coffee.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5b/The_Courtyard_Coffee_Shop_interior%2C_Ballycastle_-_geograph.org.uk_-_8123928.jpg",
+    "alt": "Interior of a small coffee shop with tables and chairs (The Courtyard Coffee Shop, Ballycastle; not this cafe)",
+    "credit": "Kenneth  Allen",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Courtyard_Coffee_Shop_interior,_Ballycastle_-_geograph.org.uk_-_8123928.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 29,
+    "key": "spaces/29/tcube-dublin.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Openspace_wao_coworking.jpg/1920px-Openspace_wao_coworking.jpg",
+    "alt": "Open-plan coworking room with rows of desks and chairs (WAO Coworking, Brussels; not this space)",
+    "credit": "WAO Coworking",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Openspace_wao_coworking.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 30,
+    "key": "spaces/30/talent-garden-dublin.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Winplace-coworking-space.jpg/1920px-Winplace-coworking-space.jpg",
+    "alt": "Coworking space with shared work tables and seating (a space in Vietnam; not this space)",
+    "credit": "Nguyendinhtruong2020",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Winplace-coworking-space.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 31,
+    "key": "spaces/31/wework-one-central-plaza.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Central_Plaza_%28former_Central_Bank%29%2C_Dame_Street.jpg/1920px-Central_Plaza_%28former_Central_Bank%29%2C_Dame_Street.jpg",
+    "alt": "Central Plaza, the refurbished former Central Bank building on Dame Street, Dublin",
+    "credit": "Conoronmaps",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Central_Plaza_(former_Central_Bank),_Dame_Street.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 32,
+    "key": "spaces/32/iconic-offices-the-greenway.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Citizen_Space%2C_San_Francisco%2C_CA.jpg/1920px-Citizen_Space%2C_San_Francisco%2C_CA.jpg",
+    "alt": "People working on laptops at shared desks in a coworking space (Citizen Space, San Francisco; not this space)",
+    "credit": "Josh Hallett from Winter Haven, FL, USA",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Citizen_Space,_San_Francisco,_CA.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 33,
+    "key": "spaces/33/the-library-bar-at-the-hoxton.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Dublin_-_Central_Hotel_-_20220914171055.jpg/1920px-Dublin_-_Central_Hotel_-_20220914171055.jpg",
+    "alt": "Exterior of the former Central Hotel building on Exchequer Street, Dublin, which now houses The Hoxton",
+    "credit": "UnVagoUV",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dublin_-_Central_Hotel_-_20220914171055.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 34,
+    "key": "spaces/34/the-long-hall.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Long_Hall%2C_Dublin.jpg/1920px-Long_Hall%2C_Dublin.jpg",
+    "alt": "The Long Hall pub on South Great George's Street, Dublin",
+    "credit": "Adam Bruderer",
+    "license": "CC BY 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Long_Hall,_Dublin.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 35,
+    "key": "spaces/35/grogan-s-castle-lounge.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Grogan%27s_Pub.jpg/1280px-Grogan%27s_Pub.jpg",
+    "alt": "Exterior of Grogan's pub on South William Street, Dublin",
+    "credit": "USERIS20010",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Grogan%27s_Pub.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 36,
+    "key": "spaces/36/kehoe-s.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Interior_of_a_traditional_London_pub_-_geograph.org.uk_-_8378573.jpg/1920px-Interior_of_a_traditional_London_pub_-_geograph.org.uk_-_8378573.jpg",
+    "alt": "Interior of a traditional pub with a wooden bar counter (a London pub; not this pub)",
+    "credit": "Alan Hughes",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Interior_of_a_traditional_London_pub_-_geograph.org.uk_-_8378573.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 37,
+    "key": "spaces/37/the-shelbourne.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Shelbourne_Hotel%2C_Dublin%2C_October_2010_%2801%29.JPG/1920px-Shelbourne_Hotel%2C_Dublin%2C_October_2010_%2801%29.JPG",
+    "alt": "Facade of the Shelbourne Hotel facing St Stephen's Green, Dublin, October 2010",
+    "credit": "Ardfern",
+    "license": "CC BY-SA 3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Shelbourne_Hotel,_Dublin,_October_2010_(01).JPG",
+    "kind": "place"
+  },
+  {
+    "spaceId": 38,
+    "key": "spaces/38/the-westbury.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Westbury_Hotel%2C_Dublin.jpg/1920px-Westbury_Hotel%2C_Dublin.jpg",
+    "alt": "Exterior of the Westbury Hotel off Grafton Street, Dublin",
+    "credit": "Conoronmaps",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Westbury_Hotel,_Dublin.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 39,
+    "key": "spaces/39/the-dean-dublin.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Interiors-Titanic-Hotel-Belfast-Lobby-Lounge_%2839972045802%29.jpg/1920px-Interiors-Titanic-Hotel-Belfast-Lobby-Lounge_%2839972045802%29.jpg",
+    "alt": "Lobby lounge with armchairs and sofas in a hotel (Titanic Hotel Belfast; not this hotel)",
+    "credit": "Titanic Belfast",
+    "license": "CC BY 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Interiors-Titanic-Hotel-Belfast-Lobby-Lounge_(39972045802).jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 40,
+    "key": "spaces/40/the-alex-hotel.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Lobby_hall_with_couches_at_The_Fullerton_Bay_Hotel_Singapore.jpg/1920px-Lobby_hall_with_couches_at_The_Fullerton_Bay_Hotel_Singapore.jpg",
+    "alt": "Spacious hotel lobby hall with couches (The Fullerton Bay Hotel, Singapore; not this hotel)",
+    "credit": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lobby_hall_with_couches_at_The_Fullerton_Bay_Hotel_Singapore.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 41,
+    "key": "spaces/41/dublin-city-library-and-archive.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Dublin_City_Library_%26_Archive.jpg",
+    "alt": "Building of the Dublin City Library and Archive on Pearse Street, Dublin",
+    "credit": "Dublin City Public Libraries",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dublin_City_Library_%26_Archive.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 42,
+    "key": "spaces/42/central-library-ilac-centre.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Round_reading_room_from_centre_round_table.jpg/1920px-Round_reading_room_from_centre_round_table.jpg",
+    "alt": "Circular library reading room seen from a central table (Maughan Library, London; not this library)",
+    "credit": "KiloCharlieLima",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Round_reading_room_from_centre_round_table.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 43,
+    "key": "spaces/43/kevin-street-library.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Kevin_Street_Library_-_geograph.org.uk_-_6027908.jpg",
+    "alt": "Exterior of Kevin Street Library, Dublin",
+    "credit": "N Chadwick",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kevin_Street_Library_-_geograph.org.uk_-_6027908.jpg",
+    "kind": "place"
+  },
+  {
+    "spaceId": 44,
+    "key": "spaces/44/rathmines-library.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Round_reading_room_from_centre_round_table.jpg/1920px-Round_reading_room_from_centre_round_table.jpg",
+    "alt": "Circular library reading room seen from a central table (Maughan Library, London; not this library)",
+    "credit": "KiloCharlieLima",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Round_reading_room_from_centre_round_table.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 45,
+    "key": "spaces/45/dogpatch-labs.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/CHQ_Building_1.JPG/1920px-CHQ_Building_1.JPG",
+    "alt": "The CHQ Building on Custom House Quay, Dublin, home of Dogpatch Labs",
+    "credit": "Dublinprojekt",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CHQ_Building_1.JPG",
+    "kind": "place"
+  },
+  {
+    "spaceId": 46,
+    "key": "spaces/46/huckletree-dublin.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/The_Academy_Dublin_Docklands.JPG/1920px-The_Academy_Dublin_Docklands.JPG",
+    "alt": "The Academy building in the Dublin docklands, home of Huckletree Dublin",
+    "credit": "Dublinprojekt",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Academy_Dublin_Docklands.JPG",
+    "kind": "place"
+  },
+  {
+    "spaceId": 47,
+    "key": "spaces/47/glandore-fitzwilliam-hall.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Openspace_wao_coworking.jpg/1920px-Openspace_wao_coworking.jpg",
+    "alt": "Open-plan coworking room with rows of desks and chairs (WAO Coworking, Brussels; not this space)",
+    "credit": "WAO Coworking",
+    "license": "CC BY-SA 4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Openspace_wao_coworking.jpg",
+    "kind": "type-fallback"
+  },
+  {
+    "spaceId": 48,
+    "key": "spaces/48/iconic-offices-the-masonry.jpg",
+    "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Citizen_Space%2C_San_Francisco%2C_CA.jpg/1920px-Citizen_Space%2C_San_Francisco%2C_CA.jpg",
+    "alt": "People working on laptops at shared desks in a coworking space (Citizen Space, San Francisco; not this space)",
+    "credit": "Josh Hallett from Winter Haven, FL, USA",
+    "license": "CC BY-SA 2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Citizen_Space,_San_Francisco,_CA.jpg",
+    "kind": "type-fallback"
+  }
+]

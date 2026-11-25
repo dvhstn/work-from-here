@@ -2,6 +2,7 @@ package dev.dvhstn.workfromhere.spaces.model;
 
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -36,6 +37,10 @@ public class SpaceResource {
     private SpaceTypeResource type;
 
     private String wifiPassword;
+
+    /** Managed outside the API (by the image ingest), so request mapping and updates never touch it. */
+    @Embedded
+    private SpaceImage image;
 
     public boolean isWifiAvailable() {
         return wifiPassword != null;
