@@ -1,1 +1,152 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+/* Class-based dark mode: `.dark` on <html> (set before paint in index.html). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- Light: warm paper ---------- */
+:root {
+  --radius: 0.75rem;
+
+  --background: oklch(0.985 0.004 80);
+  --foreground: oklch(0.22 0.01 60);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.01 60);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.01 60);
+
+  --primary: oklch(0.48 0.09 180);
+  --primary-foreground: oklch(0.99 0.005 180);
+  --secondary: oklch(0.955 0.006 80);
+  --secondary-foreground: oklch(0.26 0.01 60);
+  --muted: oklch(0.955 0.006 80);
+  --muted-foreground: oklch(0.5 0.012 60);
+  --accent: oklch(0.94 0.02 180);
+  --accent-foreground: oklch(0.3 0.06 180);
+  --destructive: oklch(0.55 0.2 27);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.91 0.006 80);
+  --input: oklch(0.88 0.008 80);
+  --ring: oklch(0.55 0.1 180);
+
+  /* Domain hues */
+  --cafe: oklch(0.52 0.13 60);
+  --cafe-soft: oklch(0.95 0.04 75);
+  --desk: oklch(0.5 0.14 275);
+  --desk-soft: oklch(0.95 0.03 275);
+  --bar: oklch(0.5 0.14 5); /* wine */
+  --bar-soft: oklch(0.95 0.025 5);
+  --hotel: oklch(0.5 0.11 240); /* blue */
+  --hotel-soft: oklch(0.95 0.025 240);
+  --library: oklch(0.48 0.1 120); /* olive */
+  --library-soft: oklch(0.95 0.04 115);
+  --coworking: oklch(0.5 0.15 320); /* plum */
+  --coworking-soft: oklch(0.95 0.03 320);
+  --wifi: oklch(0.5 0.11 155);
+  --wifi-soft: oklch(0.95 0.04 155);
+}
+
+/* ---------- Dark: roasted ---------- */
+.dark {
+  --background: oklch(0.17 0.006 60);
+  --foreground: oklch(0.95 0.005 80);
+  --card: oklch(0.205 0.007 60);
+  --card-foreground: oklch(0.95 0.005 80);
+  --popover: oklch(0.22 0.007 60);
+  --popover-foreground: oklch(0.95 0.005 80);
+
+  --primary: oklch(0.78 0.11 180);
+  --primary-foreground: oklch(0.2 0.03 180);
+  --secondary: oklch(0.26 0.008 60);
+  --secondary-foreground: oklch(0.95 0.005 80);
+  --muted: oklch(0.26 0.008 60);
+  --muted-foreground: oklch(0.72 0.01 70);
+  --accent: oklch(0.3 0.04 180);
+  --accent-foreground: oklch(0.92 0.04 180);
+  --destructive: oklch(0.68 0.19 25);
+  --destructive-foreground: oklch(0.18 0.02 25);
+
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.72 0.1 180);
+
+  --cafe: oklch(0.82 0.12 70);
+  --cafe-soft: oklch(0.3 0.05 60);
+  --desk: oklch(0.8 0.1 275);
+  --desk-soft: oklch(0.3 0.06 275);
+  --bar: oklch(0.82 0.08 5);
+  --bar-soft: oklch(0.3 0.055 5);
+  --hotel: oklch(0.82 0.08 240);
+  --hotel-soft: oklch(0.3 0.05 240);
+  --library: oklch(0.84 0.11 115);
+  --library-soft: oklch(0.3 0.04 120);
+  --coworking: oklch(0.82 0.1 320);
+  --coworking-soft: oklch(0.3 0.06 320);
+  --wifi: oklch(0.8 0.12 155);
+  --wifi-soft: oklch(0.29 0.05 155);
+}
+
+@theme inline {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, monospace;
+
+  --radius-sm: calc(var(--radius) - 6px); /* 6px badges */
+  --radius-md: calc(var(--radius) - 4px); /* 8px inputs, buttons */
+  --radius-lg: var(--radius); /* 12px cards */
+  --radius-xl: calc(var(--radius) + 4px); /* 16px dialogs */
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-cafe: var(--cafe);
+  --color-cafe-soft: var(--cafe-soft);
+  --color-desk: var(--desk);
+  --color-desk-soft: var(--desk-soft);
+  --color-bar: var(--bar);
+  --color-bar-soft: var(--bar-soft);
+  --color-hotel: var(--hotel);
+  --color-hotel-soft: var(--hotel-soft);
+  --color-library: var(--library);
+  --color-library-soft: var(--library-soft);
+  --color-coworking: var(--coworking);
+  --color-coworking-soft: var(--coworking-soft);
+  --color-wifi: var(--wifi);
+  --color-wifi-soft: var(--wifi-soft);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring;
+  }
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+}
